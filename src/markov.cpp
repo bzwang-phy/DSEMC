@@ -147,15 +147,15 @@ void markov::ChangeGroup() {
     Var.LoopMom[Var.CurrGroup->LoopNum] = NewMom;
 
     // if the current order is zero, then set channel of order 1 at T
-    // if (Var.CurrGroup->Order == 0)
-      // Var.CurrChannel = dse::T;
+    if (Var.CurrGroup->Order == 0)
+      Var.CurrChannel = dse::T;
 
   } else if (NewGroup.Order == Var.CurrGroup->Order - 1) {
     // change to a new group with one lower order
 
     // if the current order is one, then decrease order is possible only for T
-    // if (Var.CurrGroup->Order == 1 && Var.CurrChannel != dse::T)
-      // return;
+    if (Var.CurrGroup->Order == 1 && Var.CurrChannel != dse::T)
+      return;
 
     Name = DECREASE_ORDER;
     // Remove OldTau

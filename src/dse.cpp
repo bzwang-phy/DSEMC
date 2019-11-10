@@ -42,8 +42,9 @@ ver4 verDiag::Build(array<momentum, MaxMomNum> &loopMom, int LoopNum,
       LegK = {&(*LoopMom)[1], &(*LoopMom)[2], NextMom(), NextMom()};
     else
       LegK = {&(*LoopMom)[1], NextMom(), &(*LoopMom)[2], NextMom()};
-  } else
-    ABORT("Root should only have one channel.");
+  } 
+      // else
+  //   ABORT("Root should only have one channel.");
 
 
   if (Type == PARQUET)
@@ -256,8 +257,8 @@ ver4 verDiag::ChanUST(ver4 Ver4, vector<channel> Channel, int InTL, int LoopNum,
       // if (ol == 1 && c == T && LoopNum == 2)
       //   continue;
 
-      if (OnlySDiag && (c == T || c == U))
-        continue;
+      // if (OnlySDiag && (c == T || c == U))
+      //   continue;
 
       pair Pair;
       Pair.Channel = c;

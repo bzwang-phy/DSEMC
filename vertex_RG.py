@@ -14,12 +14,12 @@ size = 12
 # XType = "Tau"
 XType = "Mom"
 # XType = "Angle"
-l = 0
+l = 1
 orderAccum = None
 
 # 0: I, 1: T, 2: U, 3: S
 # Channel = [0, 1, 2, 3]
-Channel = [1]
+Channel = [3]
 
 ITUSPlot = False
 SPlot = False
@@ -189,7 +189,8 @@ def plot(folder):
         i = 0
         for chan in Channel:
             if(chan == 1):
-                qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
+                pass
+                # qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
                 # qData *= 0.0
             for order in Order[1:]:
                 i += 1
@@ -215,7 +216,7 @@ def plot(folder):
         
         for chan in Channel:
             if(chan == 1):
-                qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
+                # qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
                 # qData -= DataAccum[(orderAccum, chan)]
                 qData = DataAccum[(orderAccum, chan)]
             else:

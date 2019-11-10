@@ -235,7 +235,7 @@ def main():
             ErrorPlot(ax, orderList, res,
                     ColorList[figNum], MarkerList[figNum], title)
 
-            
+    ax.set_title(ChanName[Channel[0]]+"-channel")        
     ax.set_xlabel("order")
     ax.set_ylabel("$\Gamma_4(q=0)$")
     plt.legend(loc=1, frameon=False, fontsize=size)

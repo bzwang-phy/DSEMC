@@ -162,7 +162,7 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
         EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ * kDiQ / decayTU);
       if (kExQ < 1.0 * Para.Kf)
         EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ * kExQ / decayTU);
-      if (kSQ < -1.0 * Para.Kf){
+      if (kSQ < 1.0 * Para.Kf){
           momentum InMom = *LegK[INL] - *LegK[INR];
           momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
           AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
