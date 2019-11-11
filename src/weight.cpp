@@ -44,7 +44,7 @@ void weight::Initialization() {
   // dse::channel Chan[num] = {dse::S};
   dse::channel Chan[num] = {dse::I, dse::T, dse::U, dse::S};
   for (int c = 0; c < num; c++) {
-    if (OnlySDiag && (Chan[c] == dse::T || Chan[c] == dse::U))
+    if (OnlySDiag && !(Chan[c] == dse::S))
       continue;
     for (int order = 1; order <= Para.Order; order++) {
       vector<dse::channel> chan = {Chan[c]};

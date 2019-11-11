@@ -40,7 +40,7 @@ const bool HasCounterTerm = false;
 const double amplitude = 1.0;
 const double attrctRepel = 1.0;
 
-const bool OnlySDiag = false;
+const bool OnlySDiag = true;
 
 typedef Vec<double, D> momentum;
 // typedef std::array<double, D> momentum;
