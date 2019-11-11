@@ -33,14 +33,14 @@ enum obstype { FREQ, EQUALTIME };
 enum ver4type { POINT, FULL, MOM, MOM_ANGLE };
 
 
-const double decayTU = 0.1;
-const double decayS = 0.1;
+const double decayTU = 0.03;
+const double decayS = 0.007;
 const bool HasEffInteraction = false;
 const bool HasCounterTerm = false;
 const double amplitude = 1.0;
-const double attrctRepel = 1.0;
+const double attrctRepel = -1.0;
 
-const bool OnlySDiag = false;
+const bool OnlySDiag = true;
 
 typedef Vec<double, D> momentum;
 // typedef std::array<double, D> momentum;
