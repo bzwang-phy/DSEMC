@@ -98,7 +98,7 @@ void weight::Initialization() {
 
   Var.CurrIRScaleBin = ScaleBinSize / 1.5;
 
-  Var.CurrChannel = dse::T;
+  Var.CurrChannel = dse::S;
 
   // initialize RG staff
   // Var.CurrScale = ScaleBinSize - 1;

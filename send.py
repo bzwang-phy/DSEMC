@@ -18,16 +18,15 @@ print("Cluster: {0}".format(Cluster))
 
 if len(sys.argv) == 1:
     folderPre = ""
-    execute = "feyncalc.exe"
 elif len(sys.argv) >= 2:
     folderPre = "_".join(sys.argv[1:])+"_"
-    execute = "feyncalc_"+folderPre[:-1]+".exe"
 
 
 rootdir = os.getcwd()
 inlist = open(rootdir+"/inlist", "r")
 merge = "merge.py"
 infile = "inlist"
+execute = "feyncalc.exe"
 
 lines = inlist.readlines()
 inlist.close()

@@ -210,6 +210,7 @@ def main():
         folders = sys.argv[1:]
         for folder in folders:
             title = "Bare" if "bare" in folder.lower() else "Renorm"
+            title += " " + folder.split("_")[1]
             inlistf = os.path.join(folder, "inlist")
             with open(inlistf, "r") as file:
                 line = file.readline()

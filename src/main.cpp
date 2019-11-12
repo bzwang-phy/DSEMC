@@ -68,7 +68,7 @@ void InitPara() {
       "8", // 4 loop
       "9", // 4 loop
   };
-  Para.ReWeight = {2.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+  Para.ReWeight = {2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 1.0, 1.0, 1.0, 1.0};
   // Para.SelfEnergyType = FOCK;
   Para.SelfEnergyType = selfenergy::BARE;
 
@@ -168,15 +168,15 @@ void MonteCarlo() {
       // }
 
       double x = Random.urn();
-      if (x < 1.0 / 5.0) {
+      if (x < 1.0 / ChangeNum) {
         Markov.ChangeGroup();
         // ;
-      } else if (x < 2.0 / 5.0) {
+      } else if (x < 2.0 / ChangeNum) {
         Markov.ChangeMomentum();
         // ;
-      } else if (x < 3.0 / 5.0) {
+      } else if (x < 3.0 / ChangeNum) {
         Markov.ChangeTau();
-      } else if (x < 4.0 / 5.0) {
+      } else if (x < 4.0 / ChangeNum) {
         Markov.ChangeChannel();
         // } else if (x < 5.0 / 5.0) {
         //   Markov.ChangeScale();
