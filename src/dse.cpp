@@ -74,12 +74,15 @@ ver4 verDiag::Vertex(array<momentum *, 4> LegK, int InTL, int LoopNum,
   vector<channel> UST;
   vector<channel> II;
   for (auto &chan : Channel) {
-    if (OnlySDiag && (chan == I || chan == T || chan == U))
-      continue;
-    if (chan == I)
-      II.push_back(chan);
-    else
-      UST.push_back(chan);
+    if (!OnlySDiag){
+      if (chan == I)
+        II.push_back(chan);
+      else
+        UST.push_back(chan);
+    }else{
+      if (chan == S)
+        UST.push_back(chan);
+    }
   }
 
   if (LoopNum == 0) {
@@ -87,7 +90,8 @@ ver4 verDiag::Vertex(array<momentum *, 4> LegK, int InTL, int LoopNum,
     Ver4 = Ver0(Ver4, InTL);
   } else {
     // normal diagram
-    Ver4 = ChanI(Ver4, II, InTL, LoopNum, LoopIndex, false);
+    if (!OnlySDiag)
+      Ver4 = ChanI(Ver4, II, InTL, LoopNum, LoopIndex, false);
     Ver4 = ChanUST(Ver4, UST, InTL, LoopNum, LoopIndex, false);
 
     // counter diagrams if the vertex is on the right
@@ -264,7 +268,7 @@ ver4 verDiag::ChanUST(ver4 Ver4, vector<channel> Channel, int InTL, int LoopNum,
       // if (ol == 1 && c == T && LoopNum == 2)
       //   continue;
 
-      if (OnlySDiag && (c == T || c == U))
+      if (OnlySDiag && ol > 0)
         continue;
 
       pair Pair;
