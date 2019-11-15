@@ -33,6 +33,7 @@ public:
   void Measure();
   void ClearStatis();
   void SaveToFile(bool Simple);
+  void SaveSteps(int Step);
 
   int DynamicTest();
 
