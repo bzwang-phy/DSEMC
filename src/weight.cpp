@@ -53,7 +53,7 @@ void weight::Initialization() {
       LOG_INFO(VerDiag.ToString(Ver4Root[order][c]));
     }
   }
-  
+
   // exit(0);
 
   LOG_INFO("Initializating MC variables ...")
@@ -138,6 +138,12 @@ void weight::Measure(double WeightFactor) {
 void weight::Save(bool Simple) {
   if (Para.Type == RG && Para.Vertex4Type == MOM_ANGLE) {
     VerQTheta.Save(Simple);
+  }
+}
+
+void weight::SaveSteps(int Step) {
+  if (Para.Type == RG && Para.Vertex4Type == MOM_ANGLE) {
+    VerQTheta.SaveSteps(Step);
   }
 }
 

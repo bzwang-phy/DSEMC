@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 
-SleepTime = 10
+SleepTime = 1.13
 
 rs = None
 Lambda = None
@@ -56,7 +56,6 @@ DataErr = {}  # key: (order, channel)
 #############  3D  ######################################
 kF = (9.0*np.pi/4.0)**(1.0/3.0)/rs
 Bubble = 0.0971916  # 3D, Beta=10, rs=1
-Step = None
 
 
 def AngleIntegation(Data, l):
@@ -70,12 +69,34 @@ def AngleIntegation(Data, l):
     return Result/2.0
     # return Result
 
-print "rs:{0}, Beta:{1}, Lambda:{2}, TotalStep:{3}".format(rs, Beta, Lambda, TotalStep)
+print("rs:{0}, Beta:{1}, Lambda:{2}, TotalStep:{3}".format(rs, Beta, Lambda, TotalStep))
+
+
+def SaveStep(step, stepFlag):
+    global Channel, AngleBinSize, ExtMomBinSize, DataWithAngle
+    stepInterval = 50
+    stepNum = step//stepInterval
+    if stepNum < len(stepFlag):
+        return
+    stepFlag.append(True)
+    for chan in Channel:
+        with open("./weight_step/weight{0}.data".format(chan), "a") as file:
+            file.write("# Step: {0} \n".format(step))
+            for angle in range(AngleBinSize):
+                for qidx in range(ExtMomBinSize):
+                    file.write("{0} ".format(
+                        DataWithAngle[(0, chan)][angle, qidx]))
+            file.write("\n")
+
+
+
+if os.path.exists("./weight_step") != True:
+    os.system("mkdir ./weight_step")
+stepFlag = []
 
 while True:
-
     time.sleep(SleepTime)
-
+    StepMin = None
     for order in Order:
         for chan in Channel:
 
@@ -88,14 +109,18 @@ while True:
 
             for f in files:
                 if re.match(FileName, f):
-                    print "Loading ", f
+                    print("Loading ", f)
                     Norm0 = -1
                     d = None
                     try:
                         with open(folder+f, "r") as file:
                             line0 = file.readline()
-                            Step = int(line0.split(":")[-1])/1000000
-                            # print "Step:", Step
+                            StepRead = int(line0.split(":")[-1])/1000000
+                            if StepMin is None:
+                                StepMin = StepRead
+                            if StepRead < StepMin:
+                                StepMin = StepRead
+                            # print("StepRead:{0}, StepMin:{1}".format(StepRead, StepMin))
                             line1 = file.readline()
                             # print line1
                             Norm0 = float(line1.split(":")[-1])
@@ -105,7 +130,6 @@ while True:
                                 AngleBin = np.fromstring(
                                     line3.split(":")[1], sep=' ')
                                 AngleBinSize = len(AngleBin)
-                                print AngleBinSize
                             line4 = file.readline()
                             if ExtMomBin is None:
                                 ExtMomBin = np.fromstring(
@@ -127,71 +151,73 @@ while True:
                             f = d.reshape((AngleBinSize, ExtMomBinSize))/Norm0
                             DataList.append(AngleIntegation(f, 0))
 
-                    # print "Norm", Norm
-
-                    except:
-                        print "fail to load ", folder+f
+                    except Exception as e:
+                        print("fail to load ", folder+f)
+                        time.sleep(0.7)
+                        continue
 
             if Norm > 0 and Data0 is not None:
-                print "Total Weight: ", Data0[0]
-                Data0 /= Norm
                 try:
+                    print("Total Weight: ", Data0[0])
+                    Data0 /= Norm
                     Data0 = Data0.reshape((AngleBinSize, ExtMomBinSize))
+                    
+                    if DataWithAngle.has_key((order, chan)):
+                        DataWithAngle[(order, chan)] = DataWithAngle[(
+                            order, chan)]*0.0+Data0*1.0
+                    else:
+                        DataWithAngle[(order, chan)] = Data0
+
+                    Data[(order, chan)] = AngleIntegation(
+                        DataWithAngle[(order, chan)], 0)
+
+                    # print np.array(DataList)
+                    DataErr[(order, chan)] = np.std(np.array(
+                        DataList), axis=0)/np.sqrt(len(DataList))
                 except Exception as e:
-                    time.sleep(1)
+                    time.sleep(0.7)
                     continue
 
-
-                # print "Channel: ", chan
-                if DataWithAngle.has_key((order, chan)):
-                    DataWithAngle[(order, chan)] = DataWithAngle[(
-                        order, chan)]*0.0+Data0*1.0
-                else:
-                    DataWithAngle[(order, chan)] = Data0
-
-                Data[(order, chan)] = AngleIntegation(
-                    DataWithAngle[(order, chan)], 0)
-
-                # print np.array(DataList)
-                DataErr[(order, chan)] = np.std(np.array(
-                    DataList), axis=0)/np.sqrt(len(DataList))
-
-                # print "err", np.std(np.array(DataList))
+        
 
     if len(DataWithAngle) > 0:
-        print "Write Weight file."
-        for chan in Channel:
-            with open("./weight/weight{0}.data".format(chan), "w") as file:
-                for angle in range(AngleBinSize):
-                    for qidx in range(ExtMomBinSize):
-                        file.write("{0} ".format(
-                            DataWithAngle[(0, chan)][angle, qidx]))
+        print("Write Weight file.")
+        try:
+            for chan in Channel:
+                with open("./weight/weight{0}.data".format(chan), "w") as file:
+                    for angle in range(AngleBinSize):
+                        for qidx in range(ExtMomBinSize):
+                            file.write("{0} ".format(
+                                DataWithAngle[(0, chan)][angle, qidx]))
 
-        with open("./weight/data.data", "a") as file:
-            file.write("{0:10.6f} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(
-                Data[(0, 1)][0], Data[(0, 1)][0], Data[(0, 2)][0], Data[(0, 3)][0]))
+            with open("./weight/data.data", "a") as file:
+                file.write("{0:10.6f} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(
+                    Data[(0, 1)][0], Data[(0, 1)][0], Data[(0, 2)][0], Data[(0, 3)][0]))
 
 
-        qData = Data[(0, 1)]
-        qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)-qData
-        print "  Q/kF,    T,    Error"
-        for i in range(len(qData)):
-            print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
-                ExtMomBin[i], qData[i], DataErr[(0, 1)][i])
+            qData = Data[(0, 1)]
+            qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)-qData
+            print("  Q/kF,    T,    Error")
+            for i in range(len(qData)):
+                print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
+                    ExtMomBin[i], qData[i], DataErr[(0, 1)][i])
 
-        qData = Data[(0, 2)]
-        print "  Q/kF,    U,    Error"
-        for i in range(len(qData)):
-            print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
-                ExtMomBin[i], qData[i], DataErr[(0, 2)][i])
+            qData = Data[(0, 2)]
+            print("  Q/kF,    U,    Error")
+            for i in range(len(qData)):
+                print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
+                    ExtMomBin[i], qData[i], DataErr[(0, 2)][i])
 
-        qData = Data[(0, 3)]
-        print "  Q/kF,    S,    Error"
-        for i in range(len(qData)):
-            print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
-                ExtMomBin[i], qData[i], DataErr[(0, 3)][i])
-
-    print "Step:{0}, TotalStep:{1} ".format(Step, TotalStep)
+            qData = Data[(0, 3)]
+            print("  Q/kF,    S,    Error")
+            for i in range(len(qData)):
+                print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
+                    ExtMomBin[i], qData[i], DataErr[(0, 3)][i])
+        except Exception as e:
+            pass
+    Step = StepMin
+    SaveStep(Step, stepFlag)
+    print("Step:{0}, TotalStep:{1} ".format(Step, TotalStep))
     if Step >= TotalStep:
-        print "End of Simulation!"
+        print("End of Simulation!")
         sys.exit(0)

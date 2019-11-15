@@ -41,6 +41,7 @@ const double amplitude = 1.0;
 const double attrctRepel = 1.0;
 
 const bool OnlySDiag = true;
+const int ChangeNum = 3;
 
 typedef Vec<double, D> momentum;
 // typedef std::array<double, D> momentum;

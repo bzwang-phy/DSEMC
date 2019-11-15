@@ -168,15 +168,15 @@ void MonteCarlo() {
       // }
 
       double x = Random.urn();
-      if (x < 1.0 / 5.0) {
+      if (x < 1.0 /ChangeNum) {
         Markov.ChangeGroup();
         // ;
-      } else if (x < 2.0 / 5.0) {
+      } else if (x < 2.0 / ChangeNum) {
         Markov.ChangeMomentum();
         // ;
-      } else if (x < 3.0 / 5.0) {
+      } else if (x < 3.0 / ChangeNum) {
         Markov.ChangeTau();
-      } else if (x < 4.0 / 5.0) {
+      } else if (x < 4.0 / ChangeNum) {
         Markov.ChangeChannel();
         // } else if (x < 5.0 / 5.0) {
         //   Markov.ChangeScale();
@@ -198,6 +198,7 @@ void MonteCarlo() {
       // Markov.DynamicTest();
 
       if (i % 1000 == 0) {
+        Markov.SaveSteps(Block);
         // cout << Markov.Weight.Var.Tau[0] << " vs " <<
         // Markov.Weight.Var.Tau[1]
         //      << endl;
@@ -232,6 +233,9 @@ void MonteCarlo() {
         }
       }
     }
+
+//    Markov.SaveSteps(Block);
+
     if (Block == 100) {
       // if (Flag == 0)
       // Markov.UpdateWeight(1.0);
