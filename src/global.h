@@ -36,13 +36,16 @@ const double ChangeNum = 3.0;
 
 const double decayTU = 0.09;
 const double decayS = 0.1;
+const double decayExtK = 0.7;
 const bool HasEffInteraction = true;
 const bool HasCounterTerm = true;
+
+
 const double amplitude = 1.0;
 const double attrctRepel = -1.0;
 
 const bool OnlySDiag = true;
-const int ChangeNum = 3;
+
 
 typedef Vec<double, D> momentum;
 // typedef std::array<double, D> momentum;

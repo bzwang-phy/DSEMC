@@ -168,17 +168,18 @@ void MonteCarlo() {
       //   Markov.PrintDeBugMCInfo();
       // }
 
+      double step = i + Block*1000000;
       double x = Random.urn();
-      if (x < 1.0 / ChangeNum) {
-        Markov.ChangeGroup();
+      if (x < 1.0 /ChangeNum) {
+        Markov.ChangeGroup(step);
         // ;
       } else if (x < 2.0 / ChangeNum) {
-        Markov.ChangeMomentum();
+        Markov.ChangeMomentum(step);
         // ;
       } else if (x < 3.0 / ChangeNum) {
-        Markov.ChangeTau();
+        Markov.ChangeTau(step);
       } else if (x < 4.0 / ChangeNum) {
-        Markov.ChangeChannel();
+        Markov.ChangeChannel(step);
         // } else if (x < 5.0 / 5.0) {
         //   Markov.ChangeScale();
         // ;
@@ -234,15 +235,10 @@ void MonteCarlo() {
         }
       }
     }
-<<<<<<< HEAD
-    if (Block % 2 == 0) {
-        
-=======
 
 //    Markov.SaveSteps(Block);
 
     if (Block == 100) {
->>>>>>> SDiagram_PC
       // if (Flag == 0)
       // Markov.UpdateWeight(1.0);
       // LOG_INFO("Update weight, " << Block);

@@ -30,6 +30,7 @@ execute = "feyncalc.exe"
 
 lines = inlist.readlines()
 inlist.close()
+paraList = []
 for eachline in lines:
     os.chdir(rootdir)
     para = eachline.split()
@@ -57,11 +58,8 @@ for eachline in lines:
     paraList.append(paraName)
 
     if os.path.exists(homedir):
-        os.system("rm -fr "+homedir+"/groups")
-        os.system("rm -fr "+homedir+"/infile")
-        os.system("rm -fr "+homedir+"/outfile")
-        os.system("rm -fr "+homedir+"/jobfile")
-        os.system("rm "+homedir+"/*")
+        os.system("rm -fr "+homedir)
+        os.system("mkdir "+homedir)
     else:
         os.system("mkdir "+homedir)
 
@@ -137,8 +135,8 @@ for eachline in lines:
             break
 
     os.chdir(homedir)
-    # if "bare" not in folderPre.lower():
-    #     os.system("python " + merge + " > weight.log &")
+    if "bare" not in folderPre.lower():
+        os.system("python " + merge + " > weight.log &")
 
 print("Jobs manage daemon is ended")
 sys.exit(0)

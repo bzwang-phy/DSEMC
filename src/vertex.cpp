@@ -148,7 +148,7 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
 
   double kDiQ = DiQ.norm();
   double kExQ = ExQ.norm();
-  double kInQ = InQ.norm();
+  double kSQ = InQ.norm();
 
   if (VerType == 0) {
     return amplitude*attrctRepel*(-8.0 * PI / (kDiQ * kDiQ + Para.Mass2) + 8.0*PI / (kExQ * kExQ + Para.Mass2));
@@ -158,20 +158,20 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
       return  0.0;
     double EffInt = 0.0;
     if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
-      double extKDecay = exp(-abs( (*LegK[INL]).norm() )/0.1) * exp(-abs( (*LegK[INR]).norm() ));
-      extKDecay = extKDecay * exp(-abs( (*LegK[OUTL]).norm() )/0.1) * exp(-abs( (*LegK[OUTR]).norm() )/0.1);
+      double extKFactor = exp(-abs( (*LegK[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[INR]).norm()-Para.Kf )/decayExtK) \
+                       * exp(-abs( (*LegK[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[OUTR]).norm()-Para.Kf )/decayExtK);
       int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       if (kDiQ < 1.0 * Para.Kf)
-        EffInt += EffInterT(AngleIndex, 0) * exp(- abs(kDiQ*kDiQ) / decayTU)*extKDecay;
+        EffInt += EffInterT(AngleIndex, 0) * exp(- abs(kDiQ*kDiQ) / decayTU)*extKFactor;
         // EffInt += EffInterT(AngleIndex, 0) *decayTU;
       if (kExQ < 1.0 * Para.Kf)
-        EffInt -= EffInterT(AngleIndex, 0) * exp(- abs(kExQ*kExQ) / decayTU)*extKDecay;
+        EffInt -= EffInterT(AngleIndex, 0) * exp(- abs(kExQ*kExQ) / decayTU)*extKFactor;
         // EffInt -= EffInterT(AngleIndex, 0) *decayTU;
       if (kSQ < 1.0 * Para.Kf){
           momentum InMom = *LegK[INL] - *LegK[INR];
           momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
           AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
-          EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKDecay;
+          EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKFactor;
           // EffInt += EffInterS(AngleIndex, 0) * decayS;
       }
    }
@@ -265,7 +265,7 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
       DiffInterS(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterS(0, AngleIndex, QIndex) += WeightFactor;
       string FileName =
-          fmt::format("WeightFactor3_pid{1}.dat", Para.PID);
+          fmt::format("WeightFactor3_pid{0}.dat", Para.PID);
       ofstream VerFile;
       VerFile.open(FileName, ios::app);
       VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;

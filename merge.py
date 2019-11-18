@@ -221,11 +221,6 @@ while True:
         print("Step:{0}, TotalStep:{1} ".format(Step, TotalStep))
     except Exception as e:
         pass
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> SDiagram_PC
     if Step >= TotalStep:
         print("End of Simulation!")
         sys.exit(0)
