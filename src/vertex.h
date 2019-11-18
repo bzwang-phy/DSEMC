@@ -43,6 +43,7 @@ public:
                int Order, double Tau, int Channel, double WeightFactor);
   void Update(double Ratio, int Order);
   void Save(bool Simple = false);
+  void SaveSteps(int Step);
   void ClearStatis();
   void LoadWeight();
   void ResetIRScale(int IRScaleBin);

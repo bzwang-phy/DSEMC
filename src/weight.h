@@ -53,6 +53,7 @@ public:
   void ClearStatis();
   void LoadWeight();
   void Save(bool Simple = false);
+  void SaveSteps(int Step);
 
   // run test in MC updates
   int DynamicTest();

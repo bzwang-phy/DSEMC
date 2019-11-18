@@ -24,15 +24,16 @@ public:
   void AdjustGroupReWeight();
 
   // MC updates
-  void ChangeTau();
-  void ChangeMomentum();
-  void ChangeGroup();
-  void ChangeScale();
-  void ChangeChannel();
+  void ChangeTau(int step);
+  void ChangeMomentum(int step);
+  void ChangeGroup(int step);
+  void ChangeScale(int step);
+  void ChangeChannel(int step);
 
   void Measure();
   void ClearStatis();
   void SaveToFile(bool Simple);
+  void SaveSteps(int Step);
 
   int DynamicTest();
 

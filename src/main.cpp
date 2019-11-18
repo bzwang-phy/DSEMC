@@ -130,7 +130,7 @@ void InitPara() {
 
   Para.PrinterTimer = 10;
   Para.SaveFileTimer = 1;
-  Para.ReweightTimer = 3;
+  Para.ReweightTimer = 10;
   Para.MessageTimer = 1;
 }
 
@@ -199,6 +199,7 @@ void MonteCarlo() {
       // Markov.DynamicTest();
 
       if (i % 1000 == 0) {
+        Markov.SaveSteps(Block);
         // cout << Markov.Weight.Var.Tau[0] << " vs " <<
         // Markov.Weight.Var.Tau[1]
         //      << endl;
@@ -233,8 +234,15 @@ void MonteCarlo() {
         }
       }
     }
+<<<<<<< HEAD
     if (Block % 2 == 0) {
         
+=======
+
+//    Markov.SaveSteps(Block);
+
+    if (Block == 100) {
+>>>>>>> SDiagram_PC
       // if (Flag == 0)
       // Markov.UpdateWeight(1.0);
       // LOG_INFO("Update weight, " << Block);

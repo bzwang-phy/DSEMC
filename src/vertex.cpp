@@ -1,5 +1,6 @@
 #include "vertex.h"
 #include "global.h"
+#include "math.h"
 #include "utility/abort.h"
 #include "utility/fmt/format.h"
 #include "utility/fmt/printf.h"
@@ -143,15 +144,15 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
   // cout << (*LegK[INL])[0] << endl;
   momentum DiQ = *LegK[INL] - *LegK[OUTL];
   momentum ExQ = *LegK[INL] - *LegK[OUTR];
-  momentum SQ = *LegK[INL] + *LegK[INR];
-
+  momentum InQ = *LegK[INL] + *LegK[INR];
 
   double kDiQ = DiQ.norm();
   double kExQ = ExQ.norm();
-  double kSQ = SQ.norm();
+  double kInQ = InQ.norm();
 
   if (VerType == 0) {
-    return amplitude*attrctRepel*( -8.0*PI/(kDiQ*kDiQ+Para.Mass2) + 8.0*PI/(kExQ*kExQ+Para.Mass2) );
+    return amplitude*attrctRepel*(-8.0 * PI / (kDiQ * kDiQ + Para.Mass2) + 8.0*PI / (kExQ * kExQ + Para.Mass2));
+    // return 1.0 / Para.Beta;
   } else if (VerType == 1) {
     if (!HasEffInteraction)
       return  0.0;
@@ -173,9 +174,8 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
           EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKDecay;
           // EffInt += EffInterS(AngleIndex, 0) * decayS;
       }
+   }
       return EffInt;
-    } else
-      return 0.0;
 
     // return 0.0;
     // if (k < Para.MaxExtMom) {
@@ -264,6 +264,12 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
     } else if (Channel == 3) {
       DiffInterS(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterS(0, AngleIndex, QIndex) += WeightFactor;
+      string FileName =
+          fmt::format("WeightFactor3_pid{1}.dat", Para.PID);
+      ofstream VerFile;
+      VerFile.open(FileName, ios::app);
+      VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;
+      VerFile.close();
     } else if (Channel == 0) {
       DiffInterI(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterI(0, AngleIndex, QIndex) += WeightFactor;
@@ -322,6 +328,50 @@ void verQTheta::Save(bool Simple) {
   }
 }
 
+void verQTheta::SaveSteps(int Step) {
+    double Inter[4][4]={0};//{chan, l}
+
+    for (int chan = 0; chan < 4; chan++) {
+
+      string FileName =
+          fmt::format("vertex{0}_pid{1}.dat", chan, Para.PID);
+      ofstream VerFile;
+      VerFile.open(FileName, ios::app);
+
+      if (VerFile.is_open()) {
+        VerFile << "# Norm: "<<Normalization<<"  # Step: " <<Step<<endl;
+        int order = 0;
+        for (int angle = 0; angle < AngBinSize; ++angle){
+            double theta = acos(Para.AngleTable[angle]);
+            if (chan == 0){
+              Inter[0][0] += DiffInterI(order, angle, 0)*2.0/AngBinSize;
+              Inter[0][1] += DiffInterI(order, angle, 0)*Para.AngleTable[angle]*3/AngBinSize;
+              Inter[0][2] += DiffInterI(order, angle, 0)*(3*cos(2*theta)+1)*5/(4*AngBinSize);
+              Inter[0][3] += DiffInterI(order, angle, 0)*(5*cos(3*theta)+3*cos(theta))*7/(8*AngBinSize);
+            }else if (chan == 1){
+              Inter[1][0] += DiffInterT(order, angle, 0)*2.0/AngBinSize;
+              Inter[1][1] += DiffInterT(order, angle, 0)*Para.AngleTable[angle]*3/AngBinSize;
+              Inter[1][2] += DiffInterT(order, angle, 0)*(3*cos(2*theta)+1)*5/(4*AngBinSize);
+              Inter[1][3] += DiffInterT(order, angle, 0)*(5*cos(3*theta)+3*cos(theta))*7/(8*AngBinSize);
+            }else if (chan == 2){
+              Inter[2][0] += DiffInterU(order, angle, 0)*2.0/AngBinSize;
+              Inter[2][1] += DiffInterU(order, angle, 0)*Para.AngleTable[angle]*3/AngBinSize;
+              Inter[2][2] += DiffInterU(order, angle, 0)*(3*cos(2*theta)+1)*5/(4*AngBinSize);
+              Inter[2][3] += DiffInterU(order, angle, 0)*(5*cos(3*theta)+3*cos(theta))*7/(8*AngBinSize);
+            }else if(chan == 3){
+              Inter[3][0] += DiffInterS(order, angle, 0)*2.0/AngBinSize;
+              Inter[3][1] += DiffInterS(order, angle, 0)*Para.AngleTable[angle]*3/AngBinSize;
+              Inter[3][2] += DiffInterS(order, angle, 0)*(3*cos(2*theta)+1)*5/(4*AngBinSize);
+              Inter[3][3] += DiffInterS(order, angle, 0)*(5*cos(3*theta)+3*cos(theta))*7/(8*AngBinSize);
+            }
+        }
+        VerFile << Inter[chan][0]*PhyWeightT/Normalization/2<<"  "<<Inter[chan][1]*PhyWeightT/Normalization/2<<"  "<<Inter[chan][2]*PhyWeightT/Normalization/2<<"  "<<Inter[chan][3]*PhyWeightT/Normalization/2<<endl;
+        VerFile.close();
+      } else {
+        LOG_WARNING("Polarization of step"<<Step<<"for PID " << Para.PID << " fails to save!");
+      }
+    }
+  }
 
 
 void verQTheta::ClearStatis() {
