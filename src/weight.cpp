@@ -120,7 +120,7 @@ double weight::GetNewWeight(group &Group, int step, bool IfSave) {
   ofstream VerFile;
   VerFile.open(FileName, ios::app);
   if(VerFile.is_open()) {
-    VerFile<<step<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Group.Order<<" "<< Group.NewWeight<<endl;
+    VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Group.Order<<" "<< Group.NewWeight<<endl;
     VerFile.close();
   }
   }
