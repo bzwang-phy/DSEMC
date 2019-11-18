@@ -45,7 +45,7 @@ public:
   // two tau index on the two sides of interaction
   void ChangeGroup(group &, bool Forced = false);
   // recalculate the weights in one group
-  double GetNewWeight(group &, int step, bool IfSave); // return the current weight
+  double GetNewWeight(group &); // return the current weight
   void AcceptChange(group &);
   void RejectChange(group &);
 

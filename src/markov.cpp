@@ -101,7 +101,7 @@ void markov::PrintDeBugMCInfo() {
 void markov::AdjustGroupReWeight() {
   for (int i = 0; i < Weight.Groups.size(); i++)
     Weight.Groups[i].ReWeight = Para.ReWeight[i];
-}
+};
 
 void markov::Measure() {
   double MCWeight = fabs(Var.CurrGroup->Weight) * Var.CurrGroup->ReWeight;
@@ -112,11 +112,12 @@ void markov::Measure() {
 
   // Weight.Measure(1.0 / MCWeight);
   Weight.Measure(WeightFactor);
-}
+};
 
-void markov::SaveToFile(bool Simple) { Weight.Save(Simple);}
+void markov::SaveToFile(bool Simple) { Weight.Save(Simple); };
 
-void markov::SaveSteps(int Step){ Weight.SaveSteps(Step);}
+void markov::SaveSteps(int Step){ Weight.SaveSteps(Step);
+};
 
 void markov::ClearStatis() { Weight.ClearStatis(); }
 
@@ -174,7 +175,19 @@ void markov::ChangeGroup(int step) {
   Proposed[Name][Var.CurrGroup->ID] += 1;
 
   // Weight.ChangeGroup(NewGroup);
-  double NewWeight = Weight.GetNewWeight(NewGroup, step, true) * NewGroup.ReWeight;
+  double NewWeight = Weight.GetNewWeight(NewGroup) * NewGroup.ReWeight;
+
+  if(step%100 == 0){
+    string FileName =
+      fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+    ofstream VerFile;
+    VerFile.open(FileName, ios::app);
+    if(VerFile.is_open()) {
+      VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Var.CurrExtMomBin<<" "<<NewGroup.Order<<" "<< NewWeight<<endl;
+      VerFile.close();
+  }
+  }
+
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight) /
              Var.CurrGroup->ReWeight;
 
@@ -206,7 +219,7 @@ void markov::ChangeTau(int step) {
   Var.Tau[TauIndex] = NewTau;
 
   // Weight.ChangeTau(*Var.CurrGroup, TauIndex);
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, false);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
     Accepted[CHANGE_TAU][Var.CurrGroup->ID]++;
@@ -253,7 +266,17 @@ void markov::ChangeMomentum(int step) {
   }
 
   // Weight.ChangeMom(*Var.CurrGroup, LoopIndex);
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, IfSave);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
+  if(step%100 == 0 && LoopIndex == 0){
+    string FileName =
+      fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+    ofstream VerFile;
+    VerFile.open(FileName, ios::app);
+    if(VerFile.is_open()) {
+      VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<NewExtMomBin<<" "<<Var.CurrGroup->Order<<" "<< NewWeight<<endl;
+      VerFile.close();
+  }
+  }
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
@@ -286,7 +309,7 @@ void markov::ChangeScale(int step) {
 
   // force to change the group weight
   // Weight.ChangeGroup(*(Var.CurrGroup), true);
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, false);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
@@ -313,7 +336,7 @@ void markov::ChangeChannel(int step) {
 
   Proposed[CHANGE_CHANNEL][Var.CurrGroup->ID] += 1;
 
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, false);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {

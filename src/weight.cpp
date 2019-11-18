@@ -105,16 +105,17 @@ void weight::Initialization() {
   LOG_INFO("Calculating the weights of all objects...")
 
   // ChangeGroup(*Var.CurrGroup, true);
-  GetNewWeight(*Var.CurrGroup, 1, false);
+  GetNewWeight(*Var.CurrGroup);
   AcceptChange(*Var.CurrGroup);
 
   LOG_INFO("Initializating variables done.")
 }
 
-double weight::GetNewWeight(group &Group, int step, bool IfSave) {
+//double weight::GetNewWeight(group &Group, int step, bool IfSave) {
+double weight::GetNewWeight(group &Group) {
   Group.NewWeight = Evaluate(Group.Order, Var.CurrChannel);
 
-  if(step%1000 == 0 && IfSave){
+/*  if(step%1000 == 0 && IfSave){
   string FileName =
       fmt::format("WeightSteps_pid{0}.dat", Para.PID);
   ofstream VerFile;
@@ -123,7 +124,7 @@ double weight::GetNewWeight(group &Group, int step, bool IfSave) {
     VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Group.Order<<" "<< Group.NewWeight<<endl;
     VerFile.close();
   }
-  }
+  }*/
   return Group.NewWeight;
 }
 
