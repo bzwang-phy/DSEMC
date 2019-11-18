@@ -101,7 +101,7 @@ void markov::PrintDeBugMCInfo() {
 void markov::AdjustGroupReWeight() {
   for (int i = 0; i < Weight.Groups.size(); i++)
     Weight.Groups[i].ReWeight = Para.ReWeight[i];
-};
+}
 
 void markov::Measure() {
   double MCWeight = fabs(Var.CurrGroup->Weight) * Var.CurrGroup->ReWeight;
@@ -112,15 +112,15 @@ void markov::Measure() {
 
   // Weight.Measure(1.0 / MCWeight);
   Weight.Measure(WeightFactor);
-};
+}
 
-void markov::SaveToFile(bool Simple) { Weight.Save(Simple); }
+void markov::SaveToFile(bool Simple) { Weight.Save(Simple);}
 
 void markov::SaveSteps(int Step){ Weight.SaveSteps(Step);}
 
 void markov::ClearStatis() { Weight.ClearStatis(); }
 
-void markov::ChangeGroup() {
+void markov::ChangeGroup(int step) {
   group &NewGroup = Groups[Random.irn(0, Groups.size() - 1)];
   if (NewGroup.ID == Var.CurrGroup->ID)
     return;
@@ -150,14 +150,14 @@ void markov::ChangeGroup() {
 
     // if the current order is zero, then set channel of order 1 at T
     if (Var.CurrGroup->Order == 0)
-       Var.CurrChannel = dse::S;
+      Var.CurrChannel = dse::S;
 
   } else if (NewGroup.Order == Var.CurrGroup->Order - 1) {
     // change to a new group with one lower order
 
     // if the current order is one, then decrease order is possible only for T
     if (Var.CurrGroup->Order == 1 && Var.CurrChannel != dse::S)
-       return;
+          return;
 
     Name = DECREASE_ORDER;
     // Remove OldTau
@@ -174,7 +174,7 @@ void markov::ChangeGroup() {
   Proposed[Name][Var.CurrGroup->ID] += 1;
 
   // Weight.ChangeGroup(NewGroup);
-  double NewWeight = Weight.GetNewWeight(NewGroup) * NewGroup.ReWeight;
+  double NewWeight = Weight.GetNewWeight(NewGroup, step, true) * NewGroup.ReWeight;
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight) /
              Var.CurrGroup->ReWeight;
 
@@ -194,7 +194,7 @@ void markov::ChangeGroup() {
   return;
 };
 
-void markov::ChangeTau() {
+void markov::ChangeTau(int step) {
   int TauIndex = Random.irn(0, Var.CurrGroup->TauNum);
 
   Proposed[CHANGE_TAU][Var.CurrGroup->ID]++;
@@ -206,7 +206,7 @@ void markov::ChangeTau() {
   Var.Tau[TauIndex] = NewTau;
 
   // Weight.ChangeTau(*Var.CurrGroup, TauIndex);
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, false);
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
     Accepted[CHANGE_TAU][Var.CurrGroup->ID]++;
@@ -219,7 +219,7 @@ void markov::ChangeTau() {
   }
 };
 
-void markov::ChangeMomentum() {
+void markov::ChangeMomentum(int step) {
   int LoopIndex = Random.irn(0, Var.CurrGroup->LoopNum - 1);
   // int LoopIndex = int(Random.urn() * (Var.CurrGroup->Order + 3));
 
@@ -232,6 +232,7 @@ void markov::ChangeMomentum() {
   double Prop;
   int NewExtMomBin;
   static momentum CurrMom;
+  bool IfSave=false;
 
   CurrMom = Var.LoopMom[LoopIndex];
 
@@ -243,6 +244,7 @@ void markov::ChangeMomentum() {
       Var.LoopMom[LoopIndex] = CurrMom;
       return;
     }
+    IfSave = true;
   } else if (LoopIndex == 2) {
     // InR momentum
     Prop = ShiftExtLegK(CurrMom, Var.LoopMom[LoopIndex]);
@@ -251,7 +253,8 @@ void markov::ChangeMomentum() {
   }
 
   // Weight.ChangeMom(*Var.CurrGroup, LoopIndex);
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, IfSave);
+
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
     Accepted[CHANGE_MOM][Var.CurrGroup->ID]++;
@@ -264,7 +267,7 @@ void markov::ChangeMomentum() {
   }
 };
 
-void markov::ChangeScale() {
+void markov::ChangeScale(int step) {
   if (Para.Type != RG)
     return;
   double Prop = 1.0;
@@ -283,7 +286,7 @@ void markov::ChangeScale() {
 
   // force to change the group weight
   // Weight.ChangeGroup(*(Var.CurrGroup), true);
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, false);
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
@@ -296,7 +299,7 @@ void markov::ChangeScale() {
   return;
 }
 
-void markov::ChangeChannel() {
+void markov::ChangeChannel(int step) {
   if (Var.CurrGroup->Order == 0)
     return;
   double Prop = 1.0;
@@ -310,7 +313,7 @@ void markov::ChangeChannel() {
 
   Proposed[CHANGE_CHANNEL][Var.CurrGroup->ID] += 1;
 
-  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
+  double NewWeight = Weight.GetNewWeight(*Var.CurrGroup, step, false);
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {

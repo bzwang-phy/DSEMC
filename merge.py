@@ -161,7 +161,7 @@ while True:
                     print("Total Weight: ", Data0[0])
                     Data0 /= Norm
                     Data0 = Data0.reshape((AngleBinSize, ExtMomBinSize))
-                    
+
                     if DataWithAngle.has_key((order, chan)):
                         DataWithAngle[(order, chan)] = DataWithAngle[(
                             order, chan)]*0.0+Data0*1.0
@@ -178,7 +178,7 @@ while True:
                     time.sleep(0.7)
                     continue
 
-        
+
 
     if len(DataWithAngle) > 0:
         print("Write Weight file.")
@@ -215,9 +215,13 @@ while True:
                     ExtMomBin[i], qData[i], DataErr[(0, 3)][i])
         except Exception as e:
             pass
-    Step = StepMin
-    SaveStep(Step, stepFlag)
-    print("Step:{0}, TotalStep:{1} ".format(Step, TotalStep))
+    try:
+        Step = StepMin
+        SaveStep(Step, stepFlag)
+        print("Step:{0}, TotalStep:{1} ".format(Step, TotalStep))
+    except Exception as e:
+        pass
+
     if Step >= TotalStep:
         print("End of Simulation!")
         sys.exit(0)

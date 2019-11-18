@@ -34,11 +34,11 @@ enum ver4type { POINT, FULL, MOM, MOM_ANGLE };
 
 
 const double decayTU = 0.1;
-const double decayS = 0.1;
-const bool HasEffInteraction = false;
-const bool HasCounterTerm = false;
+const double decayS = 0.5;
+const bool HasEffInteraction = true;
+const bool HasCounterTerm = true;
 const double amplitude = 1.0;
-const double attrctRepel = 1.0;
+const double attrctRepel = -1.0;
 
 const bool OnlySDiag = true;
 const int ChangeNum = 3;

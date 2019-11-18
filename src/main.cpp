@@ -128,9 +128,9 @@ void InitPara() {
                                    << "Fermi Energy: " << Para.Ef << "\n");
 
   Para.PrinterTimer = 10;
-  Para.SaveFileTimer = 10;
-  Para.ReweightTimer = 30;
-  Para.MessageTimer = 10;
+  Para.SaveFileTimer = 1;
+  Para.ReweightTimer = 10;
+  Para.MessageTimer = 1;
 }
 
 void MonteCarlo() {
@@ -169,15 +169,15 @@ void MonteCarlo() {
 
       double x = Random.urn();
       if (x < 1.0 /ChangeNum) {
-        Markov.ChangeGroup();
+        Markov.ChangeGroup(i+Block*1000000);
         // ;
       } else if (x < 2.0 / ChangeNum) {
-        Markov.ChangeMomentum();
+        Markov.ChangeMomentum(i+Block*1000000);
         // ;
       } else if (x < 3.0 / ChangeNum) {
-        Markov.ChangeTau();
+        Markov.ChangeTau(i+Block*1000000);
       } else if (x < 4.0 / ChangeNum) {
-        Markov.ChangeChannel();
+        Markov.ChangeChannel(i+Block*1000000);
         // } else if (x < 5.0 / 5.0) {
         //   Markov.ChangeScale();
         // ;

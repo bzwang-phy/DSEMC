@@ -40,12 +40,11 @@ void weight::Initialization() {
     group.ReWeight = 1.0;
   }
 
-  int num = 4;
-  // dse::channel Chan[num] = {dse::S};
-  dse::channel Chan[num] = {dse::I, dse::T, dse::U, dse::S};
-  for (int c = 0; c < num; c++) {
+  // vector<dse::channel> Chan = {dse::T, dse::U, dse::S};
+  dse::channel Chan[4] = {dse::I, dse::T, dse::U, dse::S};
+  for (int c = 0; c < 4; c++){
     if (OnlySDiag && !(Chan[c] == dse::S))
-      continue;
+        continue;
     for (int order = 1; order <= Para.Order; order++) {
       vector<dse::channel> chan = {Chan[c]};
       Ver4Root[order][c] =
@@ -97,7 +96,7 @@ void weight::Initialization() {
 
   Var.CurrIRScaleBin = ScaleBinSize / 1.5;
 
-  Var.CurrChannel = dse::T;
+  Var.CurrChannel = dse::S;
 
   // initialize RG staff
   // Var.CurrScale = ScaleBinSize - 1;
@@ -106,14 +105,25 @@ void weight::Initialization() {
   LOG_INFO("Calculating the weights of all objects...")
 
   // ChangeGroup(*Var.CurrGroup, true);
-  GetNewWeight(*Var.CurrGroup);
+  GetNewWeight(*Var.CurrGroup, 1, false);
   AcceptChange(*Var.CurrGroup);
 
   LOG_INFO("Initializating variables done.")
 }
 
-double weight::GetNewWeight(group &Group) {
+double weight::GetNewWeight(group &Group, int step, bool IfSave) {
   Group.NewWeight = Evaluate(Group.Order, Var.CurrChannel);
+
+  if(step%1000 == 0 && IfSave){
+  string FileName =
+      fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+  ofstream VerFile;
+  VerFile.open(FileName, ios::app);
+  if(VerFile.is_open()) {
+    VerFile<<step<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Group.Order<<" "<< Group.NewWeight<<endl;
+    VerFile.close();
+  }
+  }
   return Group.NewWeight;
 }
 

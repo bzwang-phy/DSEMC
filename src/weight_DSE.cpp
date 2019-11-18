@@ -139,22 +139,21 @@ void weight::ChanUST(dse::ver4 &Ver4) {
 
     if (bubble.IsProjected && bubble.HasS) {
 
-        // double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
-        // if (InQ < 1.0 * Para.Kf) {
-        //   momentum InMom = *LegK0[INL] - *LegK0[INR];
-        //   momentum OutMom = *LegK0[OUTL] - *LegK0[OUTR];
-        //   Ratio = Para.Kf / InMom.norm();
-        //   InMom = InMom * Ratio;
-        //   Ratio = Para.Kf / OutMom.norm();
-        //   OutMom = OutMom * Ratio;
+         double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
+         if (InQ < 1.0 * Para.Kf) {
+           momentum InMom = *LegK0[INL] - *LegK0[INR];
+           momentum OutMom = *LegK0[OUTL] - *LegK0[OUTR];
+           Ratio = Para.Kf / InMom.norm();
+           InMom = InMom * Ratio;
+           Ratio = Para.Kf / OutMom.norm();
+           OutMom = OutMom * Ratio;
 
-        //   *bubble.LegK[S][INL] = InMom;
-        //   *bubble.LegK[S][OUTL] = OutMom;
-        //   *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
-        //   *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
-        //   bubble.ProjFactor[S] = exp(-InQ * InQ / decayS);
-        // }
-        
+           *bubble.LegK[S][INL] = InMom;
+           *bubble.LegK[S][OUTL] = OutMom;
+           *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
+           *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
+           bubble.ProjFactor[S] = exp(-InQ * InQ / decayS);
+       }   
     }
 
 
