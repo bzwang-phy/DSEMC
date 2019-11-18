@@ -147,15 +147,15 @@ void markov::ChangeGroup() {
     Var.LoopMom[Var.CurrGroup->LoopNum] = NewMom;
 
     // if the current order is zero, then set channel of order 1 at T
-    if (Var.CurrGroup->Order == 0)
-      Var.CurrChannel = dse::S;
+    // if (Var.CurrGroup->Order == 0)
+    //   Var.CurrChannel = dse::S;
 
   } else if (NewGroup.Order == Var.CurrGroup->Order - 1) {
     // change to a new group with one lower order
 
     // if the current order is one, then decrease order is possible only for T
-    if (Var.CurrGroup->Order == 1 && Var.CurrChannel != dse::S)
-      return;
+    // if (Var.CurrGroup->Order == 1 && Var.CurrChannel != dse::S)
+    //   return;
 
     Name = DECREASE_ORDER;
     // Remove OldTau
@@ -526,11 +526,11 @@ std::string markov::_DetailBalanceStr(Updates op) {
   string Output = string(80, '-') + "\n";
   Output += UpdatesName[op] + ":\n";
   double TotalProposed = 0.0, TotalAccepted = 0.0;
-  for (int i = 0; i <= Groups.size(); i++) {
+  for (int i = 0; i < Groups.size(); i++) {
     if (!Equal(Proposed[op][i], 0.0)) {
       TotalAccepted += Accepted[op][i];
       TotalProposed += Proposed[op][i];
-      Output += fmt::sprintf("\t%8s%2i:%15g%15g%15g\n", "Group", Groups[i].ID,
+      Output += fmt::sprintf("\t%8s%3i:%15g%15g%15g\n", "Group", Groups[i].ID,
                              Proposed[op][i], Accepted[op][i],
                              Accepted[op][i] / Proposed[op][i]);
       // fmt::format("\t%8s%4s:%15g%15g%15g\n", "Group", Groups[i].Name,

@@ -157,16 +157,21 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
       return  0.0;
     double EffInt = 0.0;
     if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
+      double extKDecay = exp(-abs( (*LegK[INL]).norm() )/0.1) * exp(-abs( (*LegK[INR]).norm() ));
+      extKDecay = extKDecay * exp(-abs( (*LegK[OUTL]).norm() )/0.1) * exp(-abs( (*LegK[OUTR]).norm() )/0.1);
       int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       if (kDiQ < 1.0 * Para.Kf)
-        EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ * kDiQ / decayTU);
+        EffInt += EffInterT(AngleIndex, 0) * exp(- abs(kDiQ*kDiQ) / decayTU)*extKDecay;
+        // EffInt += EffInterT(AngleIndex, 0) *decayTU;
       if (kExQ < 1.0 * Para.Kf)
-        EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ * kExQ / decayTU);
+        EffInt -= EffInterT(AngleIndex, 0) * exp(- abs(kExQ*kExQ) / decayTU)*extKDecay;
+        // EffInt -= EffInterT(AngleIndex, 0) *decayTU;
       if (kSQ < 1.0 * Para.Kf){
           momentum InMom = *LegK[INL] - *LegK[INR];
           momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
           AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
-          EffInt += EffInterS(AngleIndex, 0) * exp(-kSQ * kSQ / decayS);
+          EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKDecay;
+          // EffInt += EffInterS(AngleIndex, 0) * decayS;
       }
       return EffInt;
     } else
@@ -267,6 +272,7 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
   return;
 }
 
+
 void verQTheta::Save(bool Simple) {
 
   for (int chan = 0; chan < 4; chan++) {
@@ -315,6 +321,8 @@ void verQTheta::Save(bool Simple) {
     }
   }
 }
+
+
 
 void verQTheta::ClearStatis() {
   Normalization = 1.0e-10;

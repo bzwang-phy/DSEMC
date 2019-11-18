@@ -22,8 +22,8 @@ double weight::Evaluate(int LoopNum, int Channel) {
     //                              0.0, -2);
     return 1.0;
   } else {
-    // if (Channel != dse::T)
-    //   return 0.0;
+    if (Channel != dse::S)
+      return 0.0;
 
     ver4 &Root = Ver4Root[LoopNum][Channel];
     if (Root.Weight.size() == 0)
@@ -121,6 +121,9 @@ void weight::ChanUST(dse::ver4 &Ver4) {
         bubble.ProjFactor[chan] = 1.0;
 
     if (bubble.IsProjected && bubble.HasTU) {
+      double extKDecay = exp(-abs( (*LegK0[INL]).norm() )/0.1) * exp(-abs( (*LegK0[INR]).norm() ));
+      extKDecay = extKDecay * exp(-abs( (*LegK0[OUTL]).norm() )/0.1) * exp(-abs( (*LegK0[OUTR]).norm() )/0.1);
+
       double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
       double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
       if (DirQ < 1.0 * Para.Kf || ExQ < 1.0 * Para.Kf) {
@@ -129,15 +132,17 @@ void weight::ChanUST(dse::ver4 &Ver4) {
         Ratio = Para.Kf / (*LegK0[INR]).norm();
         *bubble.LegK[T][INR] = *LegK0[INR] * Ratio;
         if (DirQ < 1.0 * Para.Kf) {
-          bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU);
+          bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU * extKDecay);
         }
         if (ExQ < 1.0 * Para.Kf) {
-          bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU);
+          bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU * extKDecay);
         }
       }
     }
 
     if (bubble.IsProjected && bubble.HasS) {
+        double extKDecay = exp(-abs( (*LegK0[INL]).norm() )/0.1) * exp(-abs( (*LegK0[INR]).norm() ));
+        extKDecay = extKDecay * exp(-abs( (*LegK0[OUTL]).norm() )/0.1) * exp(-abs( (*LegK0[OUTR]).norm() )/0.1);
 
         double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
         if (InQ < 1.0 * Para.Kf) {
@@ -152,7 +157,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[S][OUTL] = OutMom;
           *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
           *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
-          bubble.ProjFactor[S] = exp(-InQ * InQ / decayS);
+          bubble.ProjFactor[S] = exp(-InQ * InQ / decayS * extKDecay);
         }
         
     }

@@ -209,8 +209,6 @@ def main():
     elif len(sys.argv) > 1:
         folders = sys.argv[1:]
         for folder in folders:
-            title = "Bare" if "bare" in folder.lower() else "Renorm"
-            title += " " + folder.split("_")[1]
             inlistf = os.path.join(folder, "inlist")
             with open(inlistf, "r") as file:
                 line = file.readline()
@@ -228,6 +226,9 @@ def main():
             Order = range(0, MaxOrder+1)
             orderAccum = MaxOrder
             orderList = [i for i in range(1, MaxOrder+1)]
+
+            title = "Bare " if "bare" in folder.lower() else "Renorm "
+            title += folder.split("_")[1]
 
             figNum += 1
             print(folder)

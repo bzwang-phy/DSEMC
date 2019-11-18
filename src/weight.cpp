@@ -142,6 +142,8 @@ void weight::Save(bool Simple) {
   }
 }
 
+
+
 void weight::ClearStatis() {
   if (Para.Type == RG && Para.Vertex4Type == MOM_ANGLE) {
     VerQTheta.ClearStatis();

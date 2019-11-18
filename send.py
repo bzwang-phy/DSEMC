@@ -56,9 +56,9 @@ for eachline in lines:
             para[0],para[1],para[2],para[3],para[5])
     paraList.append(paraName)
 
-    if os.path.exists(homedir):
-        os.system("rm -fr "+homedir)
-    os.system("mkdir "+homedir)
+    if os.path.exists(homedir) != True:
+        # os.system("rm -fr "+homedir)
+        os.system("mkdir " + homedir)
 
     os.system("cp -r groups "+homedir)
     os.system("cp {0} {1}".format(execute, homedir))
@@ -132,8 +132,8 @@ for eachline in lines:
             break
 
     os.chdir(homedir)
-    if "bare" not in folderPre.lower():
-        os.system("./" + merge + " > weight.log &")
+    # if "bare" not in folderPre.lower():
+    #     os.system("python " + merge + " > weight.log &")
 
 print("Jobs manage daemon is ended")
 sys.exit(0)

@@ -13,6 +13,7 @@
 #include "utility/timer.h"
 #include "utility/fmt/format.h"
 #include "weight.h"
+#include "vertex.h"
 #include <iostream>
 #include <math.h>
 #include <unistd.h>
@@ -128,9 +129,9 @@ void InitPara() {
                                    << "Fermi Energy: " << Para.Ef << "\n");
 
   Para.PrinterTimer = 10;
-  Para.SaveFileTimer = 10;
-  Para.ReweightTimer = 30;
-  Para.MessageTimer = 10;
+  Para.SaveFileTimer = 1;
+  Para.ReweightTimer = 3;
+  Para.MessageTimer = 1;
 }
 
 void MonteCarlo() {
@@ -232,7 +233,8 @@ void MonteCarlo() {
         }
       }
     }
-    if (Block == 100) {
+    if (Block % 2 == 0) {
+        
       // if (Flag == 0)
       // Markov.UpdateWeight(1.0);
       // LOG_INFO("Update weight, " << Block);
