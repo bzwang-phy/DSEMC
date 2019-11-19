@@ -49,6 +49,7 @@ void weight::Initialization() {
       vector<dse::channel> chan = {Chan[c]};
       Ver4Root[order][c] =
           VerDiag.Build(Var.LoopMom, order, chan, dse::caltype::PARQUET);
+      cout << fmt::format("order:{0}, channel:{1}", order, c) << endl;
       LOG_INFO(VerDiag.ToString(Ver4Root[order][c]));
     }
   }

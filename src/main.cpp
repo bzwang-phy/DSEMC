@@ -13,6 +13,7 @@
 #include "utility/timer.h"
 #include "utility/fmt/format.h"
 #include "weight.h"
+#include "vertex.h"
 #include <iostream>
 #include <math.h>
 #include <unistd.h>
@@ -68,7 +69,7 @@ void InitPara() {
       "8", // 4 loop
       "9", // 4 loop
   };
-  Para.ReWeight = {2.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+  Para.ReWeight = {2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 1.0, 1.0, 1.0, 1.0};
   // Para.SelfEnergyType = FOCK;
   Para.SelfEnergyType = selfenergy::BARE;
 
@@ -167,17 +168,18 @@ void MonteCarlo() {
       //   Markov.PrintDeBugMCInfo();
       // }
 
+      double step = i + Block*1000000;
       double x = Random.urn();
       if (x < 1.0 /ChangeNum) {
-        Markov.ChangeGroup(i+Block*1000000);
+        Markov.ChangeGroup(step);
         // ;
       } else if (x < 2.0 / ChangeNum) {
-        Markov.ChangeMomentum(i+Block*1000000);
+        Markov.ChangeMomentum(step);
         // ;
       } else if (x < 3.0 / ChangeNum) {
-        Markov.ChangeTau(i+Block*1000000);
+        Markov.ChangeTau(step);
       } else if (x < 4.0 / ChangeNum) {
-        Markov.ChangeChannel(i+Block*1000000);
+        Markov.ChangeChannel(step);
         // } else if (x < 5.0 / 5.0) {
         //   Markov.ChangeScale();
         // ;
@@ -198,7 +200,7 @@ void MonteCarlo() {
       // Markov.DynamicTest();
 
       if (i % 1000 == 0) {
-        Markov.SaveSteps(Block);
+        // Markov.SaveSteps(Block);
         // cout << Markov.Weight.Var.Tau[0] << " vs " <<
         // Markov.Weight.Var.Tau[1]
         //      << endl;

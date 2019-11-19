@@ -42,8 +42,9 @@ ver4 verDiag::Build(array<momentum, MaxMomNum> &loopMom, int LoopNum,
       LegK = {&(*LoopMom)[1], &(*LoopMom)[2], NextMom(), NextMom()};
     else
       LegK = {&(*LoopMom)[1], NextMom(), &(*LoopMom)[2], NextMom()};
-  } else
-    ABORT("Root should only have one channel.");
+  } 
+      // else
+  //   ABORT("Root should only have one channel.");
 
 
   if (Type == PARQUET)
@@ -105,21 +106,26 @@ ver4 verDiag::Vertex(array<momentum *, 4> LegK, int InTL, int LoopNum,
           //                "Right vertex should contain one I channel!");
           // ASSERT_ALLWAYS(UST.size() == 3,
           //                "Right vertex should contain one U, S, T channels!");
-          if (!OnlySDiag)
+          if (OnlySDiag){
+            Ver4 = ChanUST(Ver4, UST, InTL, LoopNum, LoopIndex, true);
+          } else {
             Ver4 = ChanI(Ver4, II, InTL, LoopNum, LoopIndex, true);
-          Ver4 = ChanUST(Ver4, UST, InTL, LoopNum, LoopIndex, true);
+            Ver4 = ChanUST(Ver4, UST, InTL, LoopNum, LoopIndex, true);
+          }
         }
       } else 
       {
         if (Ver4.RexpandBare) 
         {
           // counter diagrams if the vertex is on the left
-          if (!OnlySDiag){
+          if (OnlySDiag){
+            Ver4 = ChanUST(Ver4, {S}, InTL, LoopNum, LoopIndex, true);
+          } else {
             Ver4 = ChanI(Ver4, {I}, InTL, LoopNum, LoopIndex, true);
             Ver4 = ChanUST(Ver4, {T, U, S}, InTL, LoopNum, LoopIndex, true);
-          }else{
-            Ver4 = ChanUST(Ver4, {S}, InTL, LoopNum, LoopIndex, true);
           }
+          
+          
         }
       }
     }

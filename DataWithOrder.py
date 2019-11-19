@@ -14,12 +14,12 @@ size = 12
 # XType = "Tau"
 XType = "Mom"
 # XType = "Angle"
-l = 0
+l = 1
 orderAccum = None
 
 # 0: I, 1: T, 2: U, 3: S
 # Channel = [0, 1, 2, 3]
-Channel = [1]
+Channel = [3]
 
 ITUSPlot = False
 SPlot = False
@@ -209,7 +209,6 @@ def main():
     elif len(sys.argv) > 1:
         folders = sys.argv[1:]
         for folder in folders:
-            title = "Bare" if "bare" in folder.lower() else "Renorm"
             inlistf = os.path.join(folder, "inlist")
             with open(inlistf, "r") as file:
                 line = file.readline()
@@ -228,6 +227,9 @@ def main():
             orderAccum = MaxOrder
             orderList = [i for i in range(1, MaxOrder+1)]
 
+            title = "Bare " if "bare" in folder.lower() else "Renorm "
+            title += folder.split("_")[1]
+
             figNum += 1
             print(folder)
             readData(folder)
@@ -235,9 +237,9 @@ def main():
             ErrorPlot(ax, orderList, res,
                     ColorList[figNum], MarkerList[figNum], title)
 
-            
+    ax.set_title(ChanName[Channel[0]]+"-channel")        
     ax.set_xlabel("order")
-    ax.set_ylabel("$\Gamma_4(q=0)$")
+    ax.set_ylabel("$\Gamma_4(q=0,l="+str(l)+")$")
     plt.legend(loc=1, frameon=False, fontsize=size)
     plt.tight_layout()
     plt.show()

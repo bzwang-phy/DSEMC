@@ -22,8 +22,8 @@ double weight::Evaluate(int LoopNum, int Channel) {
     //                              0.0, -2);
     return 1.0;
   } else {
-    // if (Channel != dse::T)
-    //   return 0.0;
+    if (Channel != dse::S)
+      return 0.0;
 
     ver4 &Root = Ver4Root[LoopNum][Channel];
     if (Root.Weight.size() == 0)
@@ -38,9 +38,9 @@ double weight::Evaluate(int LoopNum, int Channel) {
     if (Channel == dse::S) {
       *Root.LegK[INR] = Var.LoopMom[0] - Var.LoopMom[1];
       *Root.LegK[OUTR] = Var.LoopMom[0] - Var.LoopMom[2];
-    } else if (Channel == dse::T) {
-      *Root.LegK[OUTL] = Var.LoopMom[1] - Var.LoopMom[0];
-      *Root.LegK[OUTR] = Var.LoopMom[2] + Var.LoopMom[0];
+    // } else if (Channel == dse::T) {
+    //   *Root.LegK[OUTL] = Var.LoopMom[1] - Var.LoopMom[0];
+    //   *Root.LegK[OUTR] = Var.LoopMom[2] + Var.LoopMom[0];
     } else if (Channel == dse::U) {
       *Root.LegK[OUTL] = Var.LoopMom[2] + Var.LoopMom[0];
       *Root.LegK[OUTR] = Var.LoopMom[1] - Var.LoopMom[0];
@@ -121,6 +121,9 @@ void weight::ChanUST(dse::ver4 &Ver4) {
         bubble.ProjFactor[chan] = 1.0;
 
     if (bubble.IsProjected && bubble.HasTU) {
+      double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
+                          *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
+
       double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
       double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
       if (DirQ < 1.0 * Para.Kf || ExQ < 1.0 * Para.Kf) {
@@ -129,31 +132,34 @@ void weight::ChanUST(dse::ver4 &Ver4) {
         Ratio = Para.Kf / (*LegK0[INR]).norm();
         *bubble.LegK[T][INR] = *LegK0[INR] * Ratio;
         if (DirQ < 1.0 * Para.Kf) {
-          bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU);
+          bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU) * extKFactor;
         }
         if (ExQ < 1.0 * Para.Kf) {
-          bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU);
+          bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU) * extKFactor;
         }
       }
     }
 
     if (bubble.IsProjected && bubble.HasS) {
+        double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
+                          *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
 
-         double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
-         if (InQ < 1.0 * Para.Kf) {
-           momentum InMom = *LegK0[INL] - *LegK0[INR];
-           momentum OutMom = *LegK0[OUTL] - *LegK0[OUTR];
-           Ratio = Para.Kf / InMom.norm();
-           InMom = InMom * Ratio;
-           Ratio = Para.Kf / OutMom.norm();
-           OutMom = OutMom * Ratio;
+        double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
+        if (InQ < 1.0 * Para.Kf) {
+          momentum InMom = *LegK0[INL] - *LegK0[INR];
+          momentum OutMom = *LegK0[OUTL] - *LegK0[OUTR];
+          Ratio = Para.Kf / InMom.norm();
+          InMom = InMom * Ratio;
+          Ratio = Para.Kf / OutMom.norm();
+          OutMom = OutMom * Ratio;
 
-           *bubble.LegK[S][INL] = InMom;
-           *bubble.LegK[S][OUTL] = OutMom;
-           *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
-           *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
-           bubble.ProjFactor[S] = exp(-InQ * InQ / decayS);
-       }   
+          *bubble.LegK[S][INL] = InMom;
+          *bubble.LegK[S][OUTL] = OutMom;
+          *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
+          *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
+          bubble.ProjFactor[S] = exp(-InQ * InQ / decayS) * extKFactor;
+        }
+        
     }
 
 

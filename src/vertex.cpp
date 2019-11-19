@@ -148,7 +148,7 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
 
   double kDiQ = DiQ.norm();
   double kExQ = ExQ.norm();
-  double kInQ = InQ.norm();
+  double kSQ = InQ.norm();
 
   if (VerType == 0) {
     return amplitude*attrctRepel*(-8.0 * PI / (kDiQ * kDiQ + Para.Mass2) + 8.0*PI / (kExQ * kExQ + Para.Mass2));
@@ -157,22 +157,22 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
     if (!HasEffInteraction)
       return  0.0;
     double EffInt = 0.0;
-   if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kInQ < 1.0 * Para.Kf) {
-      int AngleIndex_tu = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);  //t u channel
-      int AngleIndex_s = Angle2Index(Angle3D(*LegK[INL], *LegK[OUTL]), AngBinSize); //s channel
+    if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
+      double extKFactor = exp(-abs( (*LegK[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[INR]).norm()-Para.Kf )/decayExtK) \
+                       * exp(-abs( (*LegK[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[OUTR]).norm()-Para.Kf )/decayExtK);
+      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       if (kDiQ < 1.0 * Para.Kf)
-        EffInt += EffInterT(AngleIndex_tu, 0) * exp(-kDiQ * kDiQ / decayTU);
+        EffInt += EffInterT(AngleIndex, 0) * exp(- abs(kDiQ*kDiQ) / decayTU)*extKFactor;
+        // EffInt += EffInterT(AngleIndex, 0) *decayTU;
       if (kExQ < 1.0 * Para.Kf)
-        EffInt -= EffInterT(AngleIndex_tu, 0) * exp(-kExQ * kExQ / decayTU);
-
-      if (kInQ < 1.0 * Para.Kf){
-        momentum InMom = *LegK[INL] - *LegK[INR];
-        momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
-//        int AngleIndex_s = Angle2Index(Angle3D(*LegK[INL], *LegK[OUTL]), AngBinSize); //s channel
-        int AngleIndex_s = Angle2Index(Angle3D(InMom,OutMom), AngBinSize);
-
-      //  EffInt += EffInterS(AngleIndex_s, 0)/(1+kInQ *kInQ/decayS);
-        EffInt += EffInterS(AngleIndex_s, 0) * exp(-kInQ * kInQ / decayS);
+        EffInt -= EffInterT(AngleIndex, 0) * exp(- abs(kExQ*kExQ) / decayTU)*extKFactor;
+        // EffInt -= EffInterT(AngleIndex, 0) *decayTU;
+      if (kSQ < 1.0 * Para.Kf){
+          momentum InMom = *LegK[INL] - *LegK[INR];
+          momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
+          AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
+          EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKFactor;
+          // EffInt += EffInterS(AngleIndex, 0) * decayS;
       }
    }
       return EffInt;
@@ -271,7 +271,6 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
       if (VerFile.is_open()) {
         VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;
         VerFile.close();} */
-
     } else if (Channel == 0) {
       DiffInterI(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterI(0, AngleIndex, QIndex) += WeightFactor;
@@ -279,6 +278,7 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
   }
   return;
 }
+
 
 void verQTheta::Save(bool Simple) {
 

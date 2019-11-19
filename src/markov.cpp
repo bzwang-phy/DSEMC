@@ -177,16 +177,16 @@ void markov::ChangeGroup(int step) {
   // Weight.ChangeGroup(NewGroup);
   double NewWeight = Weight.GetNewWeight(NewGroup) * NewGroup.ReWeight;
 
-  if(step%100 == 0){
-    string FileName =
-      fmt::format("WeightSteps_pid{0}.dat", Para.PID);
-    ofstream VerFile;
-    VerFile.open(FileName, ios::app);
-    if(VerFile.is_open()) {
-      VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Var.CurrExtMomBin<<" "<<NewGroup.Order<<" "<< NewWeight<<endl;
-      VerFile.close();
-  }
-  }
+  // if(step%100 == 0){
+  //   string FileName =
+  //     fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+  //   ofstream VerFile;
+  //   VerFile.open(FileName, ios::app);
+  //   if(VerFile.is_open()) {
+  //     VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Var.CurrExtMomBin<<" "<<NewGroup.Order<<" "<< NewWeight<<endl;
+  //     VerFile.close();
+  // }
+  // }
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight) /
              Var.CurrGroup->ReWeight;
@@ -267,16 +267,16 @@ void markov::ChangeMomentum(int step) {
 
   // Weight.ChangeMom(*Var.CurrGroup, LoopIndex);
   double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
-  if(step%100 == 0 && LoopIndex == 0){
-    string FileName =
-      fmt::format("WeightSteps_pid{0}.dat", Para.PID);
-    ofstream VerFile;
-    VerFile.open(FileName, ios::app);
-    if(VerFile.is_open()) {
-      VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<NewExtMomBin<<" "<<Var.CurrGroup->Order<<" "<< NewWeight<<endl;
-      VerFile.close();
-  }
-  }
+  // if(step%100 == 0 && LoopIndex == 0){
+  //   string FileName =
+  //     fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+  //   ofstream VerFile;
+  //   VerFile.open(FileName, ios::app);
+  //   if(VerFile.is_open()) {
+  //     VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<NewExtMomBin<<" "<<Var.CurrGroup->Order<<" "<< NewWeight<<endl;
+  //     VerFile.close();
+  // }
+  // }
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {
@@ -554,11 +554,11 @@ std::string markov::_DetailBalanceStr(Updates op) {
   string Output = string(80, '-') + "\n";
   Output += UpdatesName[op] + ":\n";
   double TotalProposed = 0.0, TotalAccepted = 0.0;
-  for (int i = 0; i <= Groups.size(); i++) {
+  for (int i = 0; i < Groups.size(); i++) {
     if (!Equal(Proposed[op][i], 0.0)) {
       TotalAccepted += Accepted[op][i];
       TotalProposed += Proposed[op][i];
-      Output += fmt::sprintf("\t%8s%2i:%15g%15g%15g\n", "Group", Groups[i].ID,
+      Output += fmt::sprintf("\t%8s%3i:%15g%15g%15g\n", "Group", Groups[i].ID,
                              Proposed[op][i], Accepted[op][i],
                              Accepted[op][i] / Proposed[op][i]);
       // fmt::format("\t%8s%4s:%15g%15g%15g\n", "Group", Groups[i].Name,

@@ -8,6 +8,8 @@ import glob
 import os
 import re
 import copy
+import math
+
 mat.rcParams.update({'font.size': 16})
 mat.rcParams["font.family"] = "Times New Roman"
 size = 12
@@ -15,12 +17,12 @@ size = 12
 # XType = "Tau"
 XType = "Mom"
 # XType = "Angle"
-l = 0
+l = 1
 orderAccum = None
 
 # 0: I, 1: T, 2: U, 3: S
 # Channel = [0, 1, 2, 3]
-Channel = [1]
+Channel = [3]
 
 ITUSPlot = False
 SPlot = False
@@ -28,7 +30,6 @@ if len(Channel)==4:
     ITUSPlot = True
 if len(Channel)==1:
     SPlot = True
-
 
 ChanName = {0: "I", 1: "T", 2: "U", 3: "S"}
 # 0: total, 1: order 1, ...
@@ -190,7 +191,8 @@ def plot(folder):
         i = 0
         for chan in Channel:
             if(chan == 1):
-                qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
+                pass
+                # qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
                 # qData *= 0.0
             for order in Order[1:]:
                 i += 1
@@ -216,7 +218,7 @@ def plot(folder):
         
         for chan in Channel:
             if(chan == 1):
-                qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
+                # qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
                 # qData -= DataAccum[(orderAccum, chan)]
                 qData = DataAccum[(orderAccum, chan)]
             else:
@@ -225,6 +227,9 @@ def plot(folder):
 
             ErrorPlot(ax, ExtMomBin, qData,
                     ColorList[5+chan], MarkerList[chan-3], "Chan {1}".format(0, ChanName[chan]))
+
+            expData = [qData[0]*math.exp(-i**2/0.1) for i in ExtMomBin]
+            ErrorPlot(ax, ExtMomBin, expData, "k", MarkerList[chan-3], "exp")
             if SPlot and chan==3:
                 bxx = np.log(ExtMomBin[1:])  # because ExtMomBin[0] = 0
                 bx.set_xlim(min(bxx),max(bxx))
@@ -233,6 +238,7 @@ def plot(folder):
                 ErrorPlot(bx, bxx, qData[1:],
                     'r', MarkerList[0], "Chan {1}".format(0, ChanName[chan]))
 
+        
         ax.set_xlim([0.0, ExtMomBin[-1]])
         ax.set_xlabel("$q/k_F$", size=size)
         ax.set_ylabel("$-\Gamma_4(\omega=0, q)$", size=size)
