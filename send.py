@@ -58,6 +58,7 @@ for eachline in lines:
     paraList.append(paraName)
 
     if os.path.exists(homedir):
+        # os.system("mv "+homedir)
         os.system("rm -fr "+homedir)
         os.system("mkdir "+homedir)
     else:

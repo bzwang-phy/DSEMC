@@ -264,12 +264,12 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
     } else if (Channel == 3) {
       DiffInterS(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterS(0, AngleIndex, QIndex) += WeightFactor;
-      string FileName =
-          fmt::format("WeightFactor3_pid{0}.dat", Para.PID);
-      ofstream VerFile;
-      VerFile.open(FileName, ios::app);
-      VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;
-      VerFile.close();
+      // string FileName =
+      //     fmt::format("WeightFactor3_pid{0}.dat", Para.PID);
+      // ofstream VerFile;
+      // VerFile.open(FileName, ios::app);
+      // VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;
+      // VerFile.close();
     } else if (Channel == 0) {
       DiffInterI(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterI(0, AngleIndex, QIndex) += WeightFactor;

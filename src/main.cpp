@@ -200,7 +200,7 @@ void MonteCarlo() {
       // Markov.DynamicTest();
 
       if (i % 1000 == 0) {
-        Markov.SaveSteps(Block);
+        // Markov.SaveSteps(Block);
         // cout << Markov.Weight.Var.Tau[0] << " vs " <<
         // Markov.Weight.Var.Tau[1]
         //      << endl;

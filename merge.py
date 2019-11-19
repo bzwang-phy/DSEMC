@@ -74,7 +74,7 @@ print("rs:{0}, Beta:{1}, Lambda:{2}, TotalStep:{3}".format(rs, Beta, Lambda, Tot
 
 def SaveStep(step, stepFlag):
     global Channel, AngleBinSize, ExtMomBinSize, DataWithAngle
-    stepInterval = 50
+    stepInterval = 20
     stepNum = step//stepInterval
     if stepNum < len(stepFlag):
         return

@@ -154,7 +154,7 @@ def plot(flag):
         ErrorPlot(ax, xaxel, Gamma4q, ColorList[5], MarkerList[1], "")
         
         # ax.set_xlim([0.0, ExtMomBin[-1]])
-        ax.set_xlabel("Steps/$50*10^6$", size=size)
+        ax.set_xlabel("Steps/$20*10^6$", size=size)
         ax.set_ylabel("$-\Gamma_4(\omega=0, q=0)$", size=size)
     elif flag == 2:
         ax = plt.subplot(1,1,1)
