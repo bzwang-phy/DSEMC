@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import numpy as np
 from scipy import integrate
 import matplotlib.pyplot as plt
@@ -152,14 +153,14 @@ def readData(folder):
     DataAccum = copy.deepcopy(Data)
     for order in range(2, orderAccum+1):
         for chan in Channel:
-            DataAccum[(order, chan)] = DataAccum[(order-1, chan)]+Data[(order, chan)]      
+            DataAccum[(order, chan)] = DataAccum[(order-1, chan)]+Data[(order, chan)]
 
 
 def ErrorPlot(p, x, d, color, marker, label=None, size=4, shift=False):
     p.plot(x, d, marker=marker, c=color, label=label,
            lw=1, markeredgecolor="None", linestyle="--", markersize=size)
 
-    
+
 def getFileName(pre, para):
     return "./" + pre + "Order{0}_Beta{1}_lambda{2}/".format(para[0], para[1], para[3])
 
@@ -237,7 +238,7 @@ def main():
             ErrorPlot(ax, orderList, res,
                     ColorList[figNum], MarkerList[figNum], title)
 
-    ax.set_title(ChanName[Channel[0]]+"-channel")        
+    ax.set_title(ChanName[Channel[0]]+"-channel")
     ax.set_xlabel("order")
     ax.set_ylabel("$\Gamma_4(q=0,l="+str(l)+")$")
     plt.legend(loc=1, frameon=False, fontsize=size)

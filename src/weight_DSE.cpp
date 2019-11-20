@@ -22,8 +22,6 @@ double weight::Evaluate(int LoopNum, int Channel) {
     //                              0.0, -2);
     return 1.0;
   } else {
-    if (Channel != dse::S)
-      return 0.0;
 
     ver4 &Root = Ver4Root[LoopNum][Channel];
     if (Root.Weight.size() == 0)
@@ -120,10 +118,10 @@ void weight::ChanUST(dse::ver4 &Ver4) {
       else
         bubble.ProjFactor[chan] = 1.0;
 
-    if (bubble.IsProjected && bubble.HasTU) {
-      double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
-                          *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
-
+    if (bubble.IsProjected && bubble.HasTU && !OnlySProj) {
+//      double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
+      *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
+      double extKFactor = 1;
       double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
       double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
       if (DirQ < 1.0 * Para.Kf || ExQ < 1.0 * Para.Kf) {
@@ -142,7 +140,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
 
     if (bubble.IsProjected && bubble.HasS) {
         double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
-                          *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
+        *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
 
         double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
         if (InQ < 1.0 * Para.Kf) {
@@ -158,10 +156,8 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
           *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
           bubble.ProjFactor[S] = exp(-InQ * InQ / decayS) * extKFactor;
-        }
-        
+        }   
     }
-
 
     for (auto &chan : bubble.Channel) {
       array<momentum *, 4> &LegK = bubble.LegK[chan];

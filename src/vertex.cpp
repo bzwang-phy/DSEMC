@@ -159,20 +159,19 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
     double EffInt = 0.0;
     if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
       double extKFactor = exp(-abs( (*LegK[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[INR]).norm()-Para.Kf )/decayExtK) \
-                       * exp(-abs( (*LegK[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[OUTR]).norm()-Para.Kf )/decayExtK);
+      * exp(-abs( (*LegK[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[OUTR]).norm()-Para.Kf )/decayExtK);
       int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
-      if (kDiQ < 1.0 * Para.Kf)
-        EffInt += EffInterT(AngleIndex, 0) * exp(- abs(kDiQ*kDiQ) / decayTU)*extKFactor;
-        // EffInt += EffInterT(AngleIndex, 0) *decayTU;
-      if (kExQ < 1.0 * Para.Kf)
-        EffInt -= EffInterT(AngleIndex, 0) * exp(- abs(kExQ*kExQ) / decayTU)*extKFactor;
-        // EffInt -= EffInterT(AngleIndex, 0) *decayTU;
+      if (kDiQ < 1.0 * Para.Kf && !OnlySProj)
+//        EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ*kDiQ / decayTU)*extKFactor;
+          EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ*kDiQ / decayTU);
+      if (kExQ < 1.0 * Para.Kf && !OnlySProj)
+//        EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ*kExQ / decayTU)*extKFactor;
+          EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ*kExQ / decayTU);
       if (kSQ < 1.0 * Para.Kf){
           momentum InMom = *LegK[INL] - *LegK[INR];
           momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
           AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
-          EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKFactor;
-          // EffInt += EffInterS(AngleIndex, 0) * decayS;
+          EffInt += EffInterS(AngleIndex, 0) * exp(-kSQ*kSQ / decayS)*extKFactor;
       }
    }
       return EffInt;

@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import numpy as np
 from scipy import integrate
 import matplotlib.pyplot as plt
@@ -152,7 +153,7 @@ def plot(flag):
 
         print(Gamma4q)
         ErrorPlot(ax, xaxel, Gamma4q, ColorList[5], MarkerList[1], "")
-        
+
         # ax.set_xlim([0.0, ExtMomBin[-1]])
         ax.set_xlabel("Steps/$20*10^6$", size=size)
         ax.set_ylabel("$-\Gamma_4(\omega=0, q=0)$", size=size)
@@ -165,7 +166,7 @@ def plot(flag):
 
         print(len(Data), Data[1])
         ErrorPlot(ax, ExtMomBin, Data[1], ColorList[5], MarkerList[1], "")
-        
+
         ax.set_xlim([0.0, ExtMomBin[-1]])
         ax.set_xlabel("$q/k_F$", size=size)
         ax.set_ylabel("$-\Gamma_4(\omega=0, q)$", size=size)
