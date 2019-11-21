@@ -1,6 +1,6 @@
 #!/usr/bin/python
+
 import numpy as np
-from scipy import integrate
 import matplotlib.pyplot as plt
 import matplotlib as mat
 import sys
@@ -8,6 +8,7 @@ import glob
 import os
 import re
 import copy
+#from scipy import integrate
 mat.rcParams.update({'font.size': 16})
 mat.rcParams["font.family"] = "Times New Roman"
 size = 12
@@ -27,8 +28,9 @@ SPlot = False
 if len(Channel)==4:
     ITUSPlot = True
 if len(Channel)==1:
-    SPlot = True
-
+    chan = Channel[0]
+    if Channel[0]==3:
+        SPlot = True
 
 ChanName = {0: "I", 1: "T", 2: "U", 3: "S"}
 # 0: total, 1: order 1, ...
@@ -83,7 +85,7 @@ def AngleIntegation(Data, l):
 
 def readData(folder, qIndex):
     global AngleBin, ExtMomBin, AngleBinSize, ExtMomBinSize
-    global Data, Gamma4q, steps
+    global Data, Gamma4q, steps, chan
 
     files = os.listdir(folder)
     Num = 0
@@ -114,7 +116,6 @@ def readData(folder, qIndex):
                     ExtMomBin /= kF
                 break
 
-    chan = 3
     FileName = "weight_step"
     filePath = os.path.join(folder, FileName, "weight{0}.data".format(chan))
 

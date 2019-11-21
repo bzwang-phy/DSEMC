@@ -19,7 +19,7 @@ const bool DEBUGMODE = true;
 
 const int D = 3;
 // number of q bins of the external momentum
-const int ExtMomBinSize = 32;
+const int ExtMomBinSize = 72;
 // number of bins for the angle between InL and InR legs
 const int AngBinSize = 128;
 // number of energy scales, only useful in RG approach
@@ -34,7 +34,7 @@ enum ver4type { POINT, FULL, MOM, MOM_ANGLE };
 
 const double ChangeNum = 4.0;
 
-const double decayTU = 0.09;
+const double decayTU = 0.1;
 const double decayS = 0.1;
 const double decayExtK = 0.7;
 const bool HasEffInteraction = true;
@@ -45,7 +45,8 @@ const double amplitude = 1.0;
 const double attrctRepel = 1.0;
 
 const bool OnlySDiag = false;
-const bool OnlySProj = true;
+const bool OnlySProj = false;
+const bool OnlyTUProj = false;
 
 
 typedef Vec<double, D> momentum;

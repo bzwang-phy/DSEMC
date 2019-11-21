@@ -138,7 +138,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
       }
     }
 
-    if (bubble.IsProjected && bubble.HasS) {
+    if (bubble.IsProjected && bubble.HasS && !OnlyTUProj) {
         double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
         *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
 

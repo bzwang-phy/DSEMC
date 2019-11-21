@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 
-SleepTime = 10.1
+SleepTime = 20.2
 
 rs = None
 Lambda = None
@@ -153,7 +153,7 @@ while True:
 
                     except Exception as e:
                         print("fail to load ", folder+f)
-                        time.sleep(0.7)
+                        time.sleep(0.1)
                         continue
 
             if Norm > 0 and Data0 is not None:
