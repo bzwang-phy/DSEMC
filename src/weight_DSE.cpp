@@ -117,45 +117,23 @@ void weight::ChanUST(dse::ver4 &Ver4) {
         bubble.ProjFactor[chan] = 0.0;
       else
         bubble.ProjFactor[chan] = 1.0;
+    double ExpINL = pow((*LegK0[INL]).norm()-Para.Kf,2) * Para.Beta;
+    double ExpINR = pow((*LegK0[INR]).norm()-Para.Kf,2) * Para.Beta;
+    double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
+    double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
 
-    if (bubble.IsProjected && bubble.HasTU && !OnlySProj) {
-//      double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
-      *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
-      double extKFactor = 1;
-      double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
-      double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
-      if (DirQ < 1.0 * Para.Kf || ExQ < 1.0 * Para.Kf) {
-        Ratio = Para.Kf / (*LegK0[INL]).norm();
-        *bubble.LegK[T][INL] = *LegK0[INL] * Ratio;
-        Ratio = Para.Kf / (*LegK0[INR]).norm();
-        *bubble.LegK[T][INR] = *LegK0[INR] * Ratio;
-        if (DirQ < 1.0 * Para.Kf) {
-          bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU) * extKFactor;
+    if (bubble.IsProjected && ExpINL<1 && ExpINR<1 && ExpOUTL<1 && ExpOUTR<1) {
+      double extKFactor = exp(-ExpINL-ExpINR-ExpOUTL-ExpOUTR);
+      
+      if(bubble.HasTU && !OnlySProj){
+//      double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
+//      double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
+          bubble.ProjFactor[T] = extKFactor;
+          bubble.ProjFactor[U] = extKFactor;
         }
-        if (ExQ < 1.0 * Para.Kf) {
-          bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU) * extKFactor;
-        }
-      }
-    }
 
-    if (bubble.IsProjected && bubble.HasS && !OnlyTUProj) {
-        double extKFactor = exp(-abs( (*LegK0[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[INR]).norm()-Para.Kf )/decayExtK) \
-        *exp(-abs( (*LegK0[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK0[OUTR]).norm()-Para.Kf )/decayExtK);
-
-        double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
-        if (InQ < 1.0 * Para.Kf) {
-          momentum InMom = *LegK0[INL] - *LegK0[INR];
-          momentum OutMom = *LegK0[OUTL] - *LegK0[OUTR];
-          Ratio = Para.Kf / InMom.norm();
-          InMom = InMom * Ratio;
-          Ratio = Para.Kf / OutMom.norm();
-          OutMom = OutMom * Ratio;
-
-          *bubble.LegK[S][INL] = InMom;
-          *bubble.LegK[S][OUTL] = OutMom;
-          *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
-          *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
-          bubble.ProjFactor[S] = exp(-InQ * InQ / decayS) * extKFactor;
+    if (bubble.HasS && !OnlyTUProj) {
+          bubble.ProjFactor[S] = extKFactor;
         }   
     }
 
