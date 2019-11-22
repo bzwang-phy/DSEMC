@@ -122,8 +122,8 @@ void weight::ChanUST(dse::ver4 &Ver4) {
     double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
     double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
 
-    if (bubble.IsProjected && ExpINL<1 && ExpINR<1 && ExpOUTL<1 && ExpOUTR<1) {
-      double extKFactor = exp(-ExpINL-ExpINR-ExpOUTL-ExpOUTR);
+    if (bubble.IsProjected && ExpINL<5 && ExpINR<5 && ExpOUTL<5 && ExpOUTR<5) {
+      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/5.0);
       
       if(bubble.HasTU && !OnlySProj){
 //      double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
@@ -134,7 +134,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
 
     if (bubble.HasS && !OnlyTUProj) {
           bubble.ProjFactor[S] = extKFactor;
-        }   
+        }
     }
 
     for (auto &chan : bubble.Channel) {
