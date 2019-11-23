@@ -171,7 +171,7 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
       momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
       AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
 
-      EffInt += 3.0 * EffInterS(AngleIndex, 0) * exp(-kSQ*kSQ / Para.Ef/ decayS)*extKFactor;
+      EffInt += (EffInterT(AngleIndex, 0) - EffInterU(AngleIndex, 0) + EffInterS(AngleIndex, 0)) * exp(-kSQ*kSQ / Para.Ef/ decayS)*extKFactor;
     }
 /*    if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
       double extKFactor = exp(-abs( (*LegK[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[INR]).norm()-Para.Kf )/decayExtK) \

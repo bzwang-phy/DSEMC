@@ -33,7 +33,7 @@ double weight::Evaluate(int LoopNum, int Channel) {
     // }
 
 
-    if (Channel == dse::S) {
+/*    if (Channel == dse::S) {
       *Root.LegK[INR] = Var.LoopMom[0] - Var.LoopMom[1];
       *Root.LegK[OUTR] = Var.LoopMom[0] - Var.LoopMom[2];
     // } else if (Channel == dse::T) {
@@ -45,7 +45,10 @@ double weight::Evaluate(int LoopNum, int Channel) {
     } else {
       *Root.LegK[OUTL] = Var.LoopMom[1] - Var.LoopMom[0];
       *Root.LegK[OUTR] = Var.LoopMom[2] + Var.LoopMom[0];
-    }
+    } */
+
+    *Root.LegK[INR] = Var.LoopMom[0] - Var.LoopMom[1];
+    *Root.LegK[OUTR] = Var.LoopMom[0] - Var.LoopMom[2];
 
 
     Vertex4(Root);
