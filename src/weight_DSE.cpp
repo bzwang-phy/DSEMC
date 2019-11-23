@@ -123,16 +123,38 @@ void weight::ChanUST(dse::ver4 &Ver4) {
     double ExpINR = pow((*LegK0[INR]).norm()-Para.Kf,2) * Para.Beta;
     double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
     double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
+    double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
 
-    if (bubble.IsProjected && ExpINL<5 && ExpINR<5 && ExpOUTL<5 && ExpOUTR<5) {
+    if (bubble.IsProjected && InQ < 0.1*Para.Kf) {
       double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/3.0);
+      momentum InMom = *LegK0[INL] - *LegK0[INR];
+      momentum OutMom = *LegK0[OUTL] - *LegK0[OUTR];
+      Ratio = Para.Kf / InMom.norm();
+      InMom = InMom * Ratio;
+      Ratio = Para.Kf / OutMom.norm();
+      OutMom = OutMom * Ratio;
 
-      if(bubble.HasT && !OnlySProj)
-        bubble.ProjFactor[T] = extKFactor;
-      if(bubble.HasU && !OnlySProj)
-        bubble.ProjFactor[U] = extKFactor;
-      if (bubble.HasS && !OnlyTUProj)
-        bubble.ProjFactor[S] = extKFactor;
+      if(bubble.HasT && !OnlySProj){
+        *bubble.LegK[T][INL] = InMom;
+        *bubble.LegK[T][OUTL] = OutMom;
+        *bubble.LegK[T][INR] = *bubble.LegK[T][INL] * (-1.0);
+        *bubble.LegK[T][OUTR] = *bubble.LegK[T][OUTL] * (-1.0);
+        bubble.ProjFactor[T] = exp(-InQ * InQ / Para.Ef / decayS) * extKFactor;
+      }
+      if(bubble.HasU && !OnlySProj){
+        *bubble.LegK[U][INL] = InMom;
+        *bubble.LegK[U][OUTL] = OutMom;
+        *bubble.LegK[U][INR] = *bubble.LegK[U][INL] * (-1.0);
+        *bubble.LegK[U][OUTR] = *bubble.LegK[U][OUTL] * (-1.0);
+        bubble.ProjFactor[U] = exp(-InQ * InQ / Para.Ef / decayS) * extKFactor;
+      }
+      if (bubble.HasS && !OnlyTUProj){
+        *bubble.LegK[S][INL] = InMom;
+        *bubble.LegK[S][OUTL] = OutMom;
+        *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
+        *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0);
+        bubble.ProjFactor[S] = exp(-InQ * InQ / Para.Ef / decayS) * extKFactor;
+      }
     }
 
     for (auto &chan : bubble.Channel) {

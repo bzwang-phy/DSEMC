@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 
-SleepTime = 20.2
+SleepTime = 10.2
 
 rs = None
 Lambda = None
@@ -175,7 +175,7 @@ while True:
                     DataErr[(order, chan)] = np.std(np.array(
                         DataList), axis=0)/np.sqrt(len(DataList))
                 except Exception as e:
-                    time.sleep(0.7)
+                    time.sleep(0.1)
                     continue
 
 
