@@ -117,24 +117,22 @@ void weight::ChanUST(dse::ver4 &Ver4) {
         bubble.ProjFactor[chan] = 0.0;
       else
         bubble.ProjFactor[chan] = 1.0;
+
+
     double ExpINL = pow((*LegK0[INL]).norm()-Para.Kf,2) * Para.Beta;
     double ExpINR = pow((*LegK0[INR]).norm()-Para.Kf,2) * Para.Beta;
     double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
     double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
 
     if (bubble.IsProjected && ExpINL<5 && ExpINR<5 && ExpOUTL<5 && ExpOUTR<5) {
-      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/5.0);
-      
-      if(bubble.HasTU && !OnlySProj){
-//      double DirQ = (*LegK0[INL] - *LegK0[OUTL]).norm();
-//      double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
-          bubble.ProjFactor[T] = extKFactor;
-          bubble.ProjFactor[U] = extKFactor;
-        }
+      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/3.0);
 
-    if (bubble.HasS && !OnlyTUProj) {
-          bubble.ProjFactor[S] = extKFactor;
-        }
+      if(bubble.HasT && !OnlySProj)
+        bubble.ProjFactor[T] = extKFactor;
+      if(bubble.HasU && !OnlySProj)
+        bubble.ProjFactor[U] = extKFactor;
+      if (bubble.HasS && !OnlyTUProj)
+        bubble.ProjFactor[S] = extKFactor;
     }
 
     for (auto &chan : bubble.Channel) {
@@ -146,7 +144,6 @@ void weight::ChanUST(dse::ver4 &Ver4) {
       else if (chan == S)
         *G[S].K = *LegK[INL] + *LegK[INR] - K0;
     }
-
     for (int lt = InTL; lt < InTL + Ver4.TauNum - 1; ++lt)
       for (int rt = InTL + 1; rt < InTL + Ver4.TauNum; ++rt) {
         double dTau = Var.Tau[rt] - Var.Tau[lt];
@@ -164,7 +161,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
                   Fermi.Green(-dTau, *G[chan].K, UP, 0, Var.CurrScale);
         }
       }
-
+      
     // for vertex4 with one or more loops
     for (auto &pair : bubble.Pair) {
       if (abs(bubble.ProjFactor[pair.Channel]) < EPS)

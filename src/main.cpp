@@ -204,6 +204,7 @@ void MonteCarlo() {
       // }
 
       // if (i % 2 == 0)
+
       Markov.Measure();
       // Markov.DynamicTest();
 
@@ -246,7 +247,7 @@ void MonteCarlo() {
       }
     }
 
-    Markov.SaveSteps(Block);
+//    Markov.SaveSteps(Block);
 
     if (Block == 100) {
       // if (Flag == 0)

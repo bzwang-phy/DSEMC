@@ -37,7 +37,7 @@ const double ChangeNum = 4.0;
 const double decayTU = 0.1;
 const double decayS = 0.1;
 const double decayExtK = 0.7;
-const bool HasEffInteraction = false;
+const bool HasEffInteraction = true;
 const bool HasCounterTerm = true;
 
 
