@@ -228,8 +228,8 @@ def plot(folder):
             ErrorPlot(ax, ExtMomBin, qData,
                     ColorList[5+chan], MarkerList[chan-3], "Chan {1}".format(0, ChanName[chan]))
 
-            expData = [qData[0]*math.exp(-i**2/0.1) for i in ExtMomBin]
-            ErrorPlot(ax, ExtMomBin, expData, "k", MarkerList[chan-3], "exp")
+            # expData = [qData[0]*math.exp(-i**2/0.1) for i in ExtMomBin]
+            # ErrorPlot(ax, ExtMomBin, expData, "k", MarkerList[chan-3], "exp")
             if SPlot and chan==3:
                 bxx = np.log(ExtMomBin[1:])  # because ExtMomBin[0] = 0
                 bx.set_xlim(min(bxx),max(bxx))
@@ -317,7 +317,7 @@ def main():
     global Order, orderAccum, Lambda, kF
 
     figNum = 0
-    folderPre = ["Bare_", "Renorm_"]
+    folderPre = ["RenormAttct_Amp2_"]
 
     if len(sys.argv) == 1:
         with open("inlist", "r") as file:

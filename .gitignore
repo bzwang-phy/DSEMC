@@ -54,3 +54,6 @@ in00
 inlist
 *.data
 .vscode/
+Gamma4_T.py
+inlist.bare
+inlist.renorm

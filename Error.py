@@ -113,7 +113,7 @@ def readData(folder, qIndex):
                     ExtMomBin /= kF
                 break
 
-    chan = 3
+    chan = Channel[0]
     FileName = "weight_step"
     filePath = os.path.join(folder, FileName, "weight{0}.data".format(chan))
 
@@ -150,7 +150,7 @@ def plot(flag):
         ColorList = ColorList*40
         xaxel = [i for i in range(1, len(Gamma4q)+1)]
 
-        print(Gamma4q)
+        # print(Gamma4q)
         ErrorPlot(ax, xaxel, Gamma4q, ColorList[5], MarkerList[1], "")
         
         # ax.set_xlim([0.0, ExtMomBin[-1]])
@@ -163,7 +163,7 @@ def plot(flag):
         ColorList = ['r', 'b', 'g', 'm', 'c', 'navy', 'y','lime','fuchsia', 'aqua','sandybrown','slategrey']
         ColorList = ColorList*40
 
-        print(len(Data), Data[1])
+        # print(len(Data), Data[1])
         ErrorPlot(ax, ExtMomBin, Data[1], ColorList[5], MarkerList[1], "")
         
         ax.set_xlim([0.0, ExtMomBin[-1]])

@@ -58,9 +58,10 @@ for eachline in lines:
     paraList.append(paraName)
 
     if os.path.exists(homedir):
-        # os.system("mv "+homedir)
-        os.system("rm -fr "+homedir)
-        os.system("mkdir "+homedir)
+        os.chdir(homedir)
+        os.system("rm -fr infile outfile jobfile")
+        os.system("rm  feyncalc.exe  vertex?_*   _?.log  merge.py  inlist")
+        os.chdir("../")
     else:
         os.system("mkdir "+homedir)
 
