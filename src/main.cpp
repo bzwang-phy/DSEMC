@@ -247,7 +247,7 @@ void MonteCarlo() {
       }
     }
 
-    Markov.SaveSteps(Block);
+//    Markov.SaveSteps(Block);
 
     if (Block == 100) {
       // if (Flag == 0)
