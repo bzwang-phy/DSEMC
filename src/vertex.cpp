@@ -165,11 +165,12 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
 /*      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR));
       int AngleIndex_theta = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       int AngleIndex_phi = Angle2Index(Anglesurface(*LegK[INL], *LegK[INR], *LegK[OUTL], *LegK[OUTR]), AngBinSize/2); */
-    if (kSQ < 0.1* Para.Kf){
-      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/3.0);
+    if (kSQ < 1.0* Para.Kf){
+      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
       momentum InMom = *LegK[INL] - *LegK[INR];
       momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
-      AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
+      int AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize); 
+//      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[OUTL]),AngBinSize);
 
       EffInt += (EffInterT(AngleIndex, 0) - EffInterU(AngleIndex, 0) + EffInterS(AngleIndex, 0)) * exp(-kSQ*kSQ / Para.Ef/ decayS)*extKFactor;
     }

@@ -38,10 +38,11 @@ ver4 verDiag::Build(array<momentum, MaxMomNum> &loopMom, int LoopNum,
   array<momentum *, 4> LegK;
 
   if (Channel.size() == 1) {
-    if (Channel[0]==dse::S)
+/*    if (Channel[0]==dse::S)
       LegK = {&(*LoopMom)[1], &(*LoopMom)[2], NextMom(), NextMom()};
     else
-      LegK = {&(*LoopMom)[1], NextMom(), &(*LoopMom)[2], NextMom()};
+      LegK = {&(*LoopMom)[1], NextMom(), &(*LoopMom)[2], NextMom()}; */
+      LegK = {&(*LoopMom)[1], &(*LoopMom)[2], NextMom(), NextMom()};
   } 
       // else
   //   ABORT("Root should only have one channel.");
@@ -225,18 +226,20 @@ ver4 verDiag::ChanUST(ver4 Ver4, vector<channel> Channel, int InTL, int LoopNum,
   if (IsProjected) {
     for (auto &s : SymFactor)
       s *= -1;
-    if (HasT || HasU) {
-/*      Bubble.LegK[T][INL] = NextMom();
+/*    if (HasT || HasU) {
+      Bubble.LegK[T][INL] = NextMom();
       Bubble.LegK[T][INR] = NextMom();
       Bubble.LegK[T][OUTL] = Bubble.LegK[T][INL];
       Bubble.LegK[T][OUTR] = Bubble.LegK[T][INR];
       Bubble.LegK[U][INL] = Bubble.LegK[T][INL];
       Bubble.LegK[U][INR] = Bubble.LegK[T][INR];
       Bubble.LegK[U][OUTL] = Bubble.LegK[T][INR];
-      Bubble.LegK[U][OUTR] = Bubble.LegK[T][INL]; */
+      Bubble.LegK[U][OUTR] = Bubble.LegK[T][INL]; 
+    } */
+    if (HasT)
       Bubble.LegK[T] = {NextMom(), NextMom(), NextMom(), NextMom()};
+    if (HasU)
       Bubble.LegK[U] = {NextMom(), NextMom(), NextMom(), NextMom()};
-    }
     if (HasS)
       // Bubble.LegK[S] = {Bubble.LegK[T][INL], NextMom(), NextMom(),
       // NextMom()};

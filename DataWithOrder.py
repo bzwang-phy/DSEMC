@@ -228,8 +228,9 @@ def main():
             orderAccum = MaxOrder
             orderList = [i for i in range(1, MaxOrder+1)]
 
-            title = "Bare " if "bare" in folder.lower() else "Renorm "
-            title += folder.split("_")[1]
+#            title = "Bare " if "bare" in folder.lower() else "Renorm "
+#            title += folder.split("_")[1]
+            title = folder.split("_")[0]+folder.split("_")[1]
 
             figNum += 1
             print(folder)
