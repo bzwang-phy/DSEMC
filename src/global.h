@@ -44,8 +44,8 @@ const bool HasCounterTerm = true;
 const double amplitude = 1.0;
 const double attrctRepel = 1.0;
 
-const bool OnlySDiag = false;
-const bool OnlySProj = false;
+const bool OnlySDiag = true;
+const bool OnlySProj = true;
 const bool OnlyTUProj = false;
 
 

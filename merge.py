@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 
-SleepTime = 10.2
+SleepTime = 1.1
 
 rs = None
 Lambda = None
