@@ -35,8 +35,8 @@ enum ver4type { POINT, FULL, MOM, MOM_ANGLE };
 const double ChangeNum = 4.0;
 
 const double decayTU = 0.1;
-const double decayS = 0.04;
-const double decayExtK = 3.0;
+const double decayS = 0.147; //0.1;
+const double decayExtK = 0.474; //0.7;
 const bool HasEffInteraction = true;
 const bool HasCounterTerm = true;
 
@@ -45,7 +45,7 @@ const double amplitude = 1.0;
 const double attrctRepel = 1.0;
 
 const bool OnlySDiag = false;
-const bool OnlySProj = true;
+const bool OnlySProj = false;
 const bool OnlyTUProj = false;
 
 

@@ -164,6 +164,7 @@ void MonteCarlo() {
   LOG_INFO("Loading Weight...")
   Markov.Weight.LoadWeight();
 
+
   while (true) {
     Block++;
     if (Block > Para.TotalStep)
