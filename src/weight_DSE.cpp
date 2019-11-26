@@ -121,11 +121,14 @@ void weight::ChanUST(dse::ver4 &Ver4) {
       else
         bubble.ProjFactor[chan] = 1.0;
 
-    double ExpINL = pow((*LegK0[INL]).norm()-Para.Kf,2) * Para.Beta;
-    double ExpINR = pow((*LegK0[INR]).norm()-Para.Kf,2) * Para.Beta;
-    double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
-    double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
-    
+//    double ExpINL = pow((*LegK0[INL]).norm()-Para.Kf,2) * Para.Beta;
+//    double ExpINR = pow((*LegK0[INR]).norm()-Para.Kf,2) * Para.Beta;
+//    double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
+//    double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
+    double ExpINL = abs((*LegK0[INL]).norm()-Para.Kf) * sqrt(Para.Beta);
+    double ExpINR = abs((*LegK0[INR]).norm()-Para.Kf) * sqrt(Para.Beta);
+    double ExpOUTL = abs((*LegK0[OUTL]).norm()-Para.Kf) * sqrt(Para.Beta);
+    double ExpOUTR = abs((*LegK0[OUTR]).norm()-Para.Kf) * sqrt(Para.Beta);
 
     if (bubble.IsProjected) {
       double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
