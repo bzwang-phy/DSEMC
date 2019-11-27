@@ -169,16 +169,21 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
 /*      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR));
       int AngleIndex_theta = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       int AngleIndex_phi = Angle2Index(Anglesurface(*LegK[INL], *LegK[INR], *LegK[OUTL], *LegK[OUTR]), AngBinSize/2); */
-    if (kSQ < 1.0* Para.Kf){
-      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
+    double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
+    if (kDiQ < 1.0* Para.Kf && !OnlySProj){
+      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
+      EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ*kDiQ /decayTU)*extKFactor;
+    }
+    if (kExQ < 1.0* Para.Kf && !OnlySProj){
+      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
+      EffInt -= EffInterU(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
+    }
+    if (kSQ < 1.0* Para.Kf && !OnlyTUProj){
       momentum InMom = *LegK[INL] - *LegK[INR];
       momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
       int AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize); 
-//      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[OUTL]),AngBinSize);
-      if (!OnlySProj)
-        EffInt += (EffInterT(AngleIndex, 0) - EffInterU(AngleIndex, 0)) * exp(-kSQ*kSQ / decayS)*extKFactor;
-//        EffInt += (EffInterT(AngleIndex, 0) - EffInterU(AngleIndex, 0)) * exp(-kSQ*kSQ / Para.Ef/ decayS)*extKFactor;
-//      EffInt += EffInterS(AngleIndex, 0) * exp(-kSQ*kSQ / Para.Ef/ decayS)*extKFactor;
+/*      if (!OnlySProj)
+        EffInt += (EffInterT(AngleIndex, 0) - EffInterU(AngleIndex, 0)) * exp(-kSQ*kSQ / decayS)*extKFactor; */
       EffInt += EffInterS(AngleIndex, 0) * exp(-kSQ*kSQ / decayS)*extKFactor;
     }
 /*    if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
