@@ -151,8 +151,8 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[T][OUTL] = *LegK0[INL] * (-1.0);
           *bubble.LegK[T][OUTR] = *LegK0[INR] * (-1.0);
           bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU) * extKFactor;
-        }
-/*       if(InQ < 1.0*Para.Kf){
+        } 
+/*      if(InQ < 1.0*Para.Kf){
         *bubble.LegK[T][INL] = InMom;
         *bubble.LegK[T][OUTL] = OutMom;
         *bubble.LegK[T][INR] = *bubble.LegK[T][INL] * (-1.0);
@@ -170,7 +170,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[U][OUTL] = *LegK0[INR] * (-1.0);
           *bubble.LegK[U][OUTR] = *LegK0[INL] * (-1.0);
           bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU) * extKFactor;
-        }
+        } 
 /*        if(InQ < 1.0*Para.Kf){
           *bubble.LegK[U][INL] = InMom;
           *bubble.LegK[U][OUTL] = OutMom;
