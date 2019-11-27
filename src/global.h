@@ -37,8 +37,8 @@ const double ChangeNum = 4.0;
 const double decayTU = 0.1;
 const double decayS = 0.147; //0.1;
 const double decayExtK = 0.474; //0.7;
-const bool HasEffInteraction = false;
-const bool HasCounterTerm = false;
+const bool HasEffInteraction = true;
+const bool HasCounterTerm = true;
 
 
 const double amplitude = 1.0;
