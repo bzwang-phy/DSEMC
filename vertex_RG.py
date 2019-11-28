@@ -154,7 +154,7 @@ def readData(folder):
     DataAccum = copy.deepcopy(Data)
     for order in range(2, orderAccum+1):
         for chan in Channel:
-            DataAccum[(order, chan)] = DataAccum[(order-1, chan)]+Data[(order, chan)]     
+            DataAccum[(order, chan)] = DataAccum[(order-1, chan)]+Data[(order, chan)]
 
 
 
@@ -208,14 +208,14 @@ def plot(folder):
                     ErrorPlot(dx, ExtMomBin, DataAccum[(order, chan)],
                             ColorList[order], MarkerList[chan], "Loop {0}, Chan {1}".format(order, ChanName[chan]))
                     print("order:{0},Chan {1}, Gamma4:{2}".format(order, ChanName[chan], DataAccum[(order, chan)][0]))
-                     
+
                     cx.set_xlabel("$q/k_F$", size=size)
                     cx.set_ylabel("$-\Gamma_4(\omega=0, q)$", size=size)
                     cx.set_title("$\Gamma_4$ with order", size=size)
                     dx.set_xlabel("$q/k_F$", size=size)
                     dx.set_ylabel("$-\Gamma_4^{accumulate}(\omega=0, q)$", size=size)
                     dx.set_title("accumulate $\Gamma_4$ with order", size=size)
-        
+
         for chan in Channel:
             if(chan == 1):
                 # qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)
@@ -238,7 +238,7 @@ def plot(folder):
                 ErrorPlot(bx, bxx, qData[1:],
                     'r', MarkerList[0], "Chan {1}".format(0, ChanName[chan]))
 
-        
+
         ax.set_xlim([0.0, ExtMomBin[-1]])
         ax.set_xlabel("$q/k_F$", size=size)
         ax.set_ylabel("$-\Gamma_4(\omega=0, q)$", size=size)
@@ -308,7 +308,7 @@ def plot(folder):
     plt.tight_layout()
 
 
-    
+
 def getFileName(pre, para):
     return "./" + pre + "Order{0}_Beta{1}_lambda{2}/".format(para[0], para[1], para[3])
 

@@ -149,6 +149,14 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
   double kDiQ = DiQ.norm();
   double kExQ = ExQ.norm();
   double kSQ = InQ.norm();
+//  double ExpINL = pow((*LegK[INL]).norm()-Para.Kf,2) * Para.Beta;
+//  double ExpINR = pow((*LegK[INR]).norm()-Para.Kf,2) * Para.Beta;
+//  double ExpOUTL = pow((*LegK[OUTL]).norm()-Para.Kf,2) * Para.Beta;
+//  double ExpOUTR = pow((*LegK[OUTR]).norm()-Para.Kf,2) * Para.Beta;
+  double ExpINL = abs((*LegK[INL]).norm()-Para.Kf); //* sqrt(Para.Beta);
+  double ExpINR = abs((*LegK[INR]).norm()-Para.Kf); //* sqrt(Para.Beta);
+  double ExpOUTL = abs((*LegK[OUTL]).norm()-Para.Kf);// * sqrt(Para.Beta);
+  double ExpOUTR = abs((*LegK[OUTR]).norm()-Para.Kf);// * sqrt(Para.Beta);
 
   if (VerType == 0) {
     return amplitude*attrctRepel*(-8.0 * PI / (kDiQ * kDiQ + Para.Mass2) + 8.0*PI / (kExQ * kExQ + Para.Mass2));
@@ -157,25 +165,29 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
     if (!HasEffInteraction)
       return  0.0;
     double EffInt = 0.0;
-    if (kDiQ < 1.0 * Para.Kf || kExQ < 1.0 * Para.Kf || kSQ < 1.0 * Para.Kf) {
-      double extKFactor = exp(-abs( (*LegK[INL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[INR]).norm()-Para.Kf )/decayExtK) \
-                       * exp(-abs( (*LegK[OUTL]).norm()-Para.Kf )/decayExtK) * exp(-abs( (*LegK[OUTR]).norm()-Para.Kf )/decayExtK);
-      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
-      if (kDiQ < 1.0 * Para.Kf)
-        EffInt += EffInterT(AngleIndex, 0) * exp(- abs(kDiQ*kDiQ) / decayTU)*extKFactor;
-        // EffInt += EffInterT(AngleIndex, 0) *decayTU;
-      if (kExQ < 1.0 * Para.Kf)
-        EffInt -= EffInterT(AngleIndex, 0) * exp(- abs(kExQ*kExQ) / decayTU)*extKFactor;
-        // EffInt -= EffInterT(AngleIndex, 0) *decayTU;
-      if (kSQ < 1.0 * Para.Kf){
-          momentum InMom = *LegK[INL] - *LegK[INR];
-          momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
-          AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
-          EffInt += EffInterS(AngleIndex, 0) * exp(- abs(kSQ*kSQ) / decayS)*extKFactor;
-          // EffInt += EffInterS(AngleIndex, 0) * decayS;
-      }
-   }
-      return EffInt;
+
+/*      double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR));
+      int AngleIndex_theta = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
+      int AngleIndex_phi = Angle2Index(Anglesurface(*LegK[INL], *LegK[INR], *LegK[OUTL], *LegK[OUTR]), AngBinSize/2); */
+    double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
+    if (kDiQ < 1.0* Para.Kf && !OnlySProj){
+      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
+      EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ*kDiQ /decayTU)*extKFactor;
+    }
+    if (kExQ < 1.0* Para.Kf && !OnlySProj){
+      int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
+//      EffInt += EffInterU(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
+      EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
+    }
+    if (kSQ < 1.0* Para.Kf){
+      momentum InMom = *LegK[INL] - *LegK[INR];
+      momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
+      int AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize); 
+//      if (!OnlySProj)
+//        EffInt += (EffInterT(AngleIndex, 0) + EffInterU(AngleIndex, 0)) * exp(-kSQ*kSQ / decayS)*extKFactor;
+      EffInt += EffInterS(AngleIndex, 0) * exp(-kSQ*kSQ / decayS)*extKFactor;
+    }
+    return EffInt;
 
     // return 0.0;
     // if (k < Para.MaxExtMom) {
@@ -264,12 +276,13 @@ void verQTheta::Measure(const momentum &InL, const momentum &InR,
     } else if (Channel == 3) {
       DiffInterS(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterS(0, AngleIndex, QIndex) += WeightFactor;
-      // string FileName =
-      //     fmt::format("WeightFactor3_pid{0}.dat", Para.PID);
-      // ofstream VerFile;
-      // VerFile.open(FileName, ios::app);
-      // VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;
-      // VerFile.close();
+/*      string FileName =
+          fmt::format("WeightFactor3_pid{0}.dat", Para.PID);
+      ofstream VerFile;
+      VerFile.open(FileName, ios::app);
+      if (VerFile.is_open()) {
+        VerFile << AngleIndex<< QIndex<< WeightFactor<<endl;
+        VerFile.close();} */
     } else if (Channel == 0) {
       DiffInterI(Order, AngleIndex, QIndex) += WeightFactor;
       DiffInterI(0, AngleIndex, QIndex) += WeightFactor;
@@ -620,6 +633,20 @@ double diag::Angle3D(const momentum &K1, const momentum &K2) {
   double dotp = K1.dot(K2);
   double Angle2D = dotp / K1.norm() / K2.norm();
   return Angle2D;
+}
+
+double diag::Anglesurface(const momentum &K1, const momentum &K2, const momentum &K3, const momentum &K4) {
+ // Returns the angle between two surfaces consistuted by (K1,K2) and (K3,K4).
+  momentum n1, n2;
+  n1[0] = K1[1]*K2[2]-K1[2]*K2[1];
+  n1[1] = K1[2]*K2[0]-K1[0]*K2[2];
+  n1[2] = K1[0]*K2[1]-K1[1]*K2[0];
+  n2[0] = K3[1]*K4[2]-K3[2]*K4[1];
+  n2[1] = K3[2]*K4[0]-K3[0]*K4[2];
+  n2[2] = K3[0]*K4[1]-K3[1]*K4[0];
+  double dotp = n1.dot(n2);
+  double Anglesurface = abs( dotp / n1.norm() / n2.norm());
+  return Anglesurface;
 }
 
 double diag::Index2Angle(const int &Index, const int &AngleNum) {

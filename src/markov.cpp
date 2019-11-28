@@ -177,16 +177,16 @@ void markov::ChangeGroup(int step) {
   // Weight.ChangeGroup(NewGroup);
   double NewWeight = Weight.GetNewWeight(NewGroup) * NewGroup.ReWeight;
 
-  // if(step%100 == 0){
-  //   string FileName =
-  //     fmt::format("WeightSteps_pid{0}.dat", Para.PID);
-  //   ofstream VerFile;
-  //   VerFile.open(FileName, ios::app);
-  //   if(VerFile.is_open()) {
-  //     VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Var.CurrExtMomBin<<" "<<NewGroup.Order<<" "<< NewWeight<<endl;
-  //     VerFile.close();
-  // }
-  // }
+/*  if(step%100 == 0){
+     string FileName =
+       fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+     ofstream VerFile;
+     VerFile.open(FileName, ios::app);
+     if(VerFile.is_open()) {
+       VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<Var.CurrExtMomBin<<" "<<NewGroup.Order<<" "<< NewWeight<<endl;
+       VerFile.close();
+    }
+  } */
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight) /
              Var.CurrGroup->ReWeight;
@@ -267,16 +267,16 @@ void markov::ChangeMomentum(int step) {
 
   // Weight.ChangeMom(*Var.CurrGroup, LoopIndex);
   double NewWeight = Weight.GetNewWeight(*Var.CurrGroup);
-  // if(step%100 == 0 && LoopIndex == 0){
-  //   string FileName =
-  //     fmt::format("WeightSteps_pid{0}.dat", Para.PID);
-  //   ofstream VerFile;
-  //   VerFile.open(FileName, ios::app);
-  //   if(VerFile.is_open()) {
-  //     VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<NewExtMomBin<<" "<<Var.CurrGroup->Order<<" "<< NewWeight<<endl;
-  //     VerFile.close();
-  // }
-  // }
+/*   if(step%100 == 0 && LoopIndex == 0){
+     string FileName =
+       fmt::format("WeightSteps_pid{0}.dat", Para.PID);
+     ofstream VerFile;
+     VerFile.open(FileName, ios::app);
+     if(VerFile.is_open()) {
+       VerFile<<step<<" "<<Var.CurrChannel<<" "<<Var.CurrExtMomBin<<" "<<Var.CurrGroup->Order<<" "<<Var.CurrGroup->Weight<<" "<<NewExtMomBin<<" "<<Var.CurrGroup->Order<<" "<< NewWeight<<endl;
+       VerFile.close();
+    }
+  } */
 
   double R = Prop * fabs(NewWeight) / fabs(Var.CurrGroup->Weight);
   if (Random.urn() < R) {

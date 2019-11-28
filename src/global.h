@@ -32,19 +32,21 @@ enum type { GU, GW, RG, PARQUET };
 enum obstype { FREQ, EQUALTIME };
 enum ver4type { POINT, FULL, MOM, MOM_ANGLE };
 
-const double ChangeNum = 3.0;
+const double ChangeNum = 4.0;
 
-const double decayTU = 0.05;
-const double decayS = 0.05;
-const double decayExtK = 0.3;
+const double decayTU = 0.1;
+const double decayS = 0.147; //0.1;
+const double decayExtK = 0.474; //0.7;
 const bool HasEffInteraction = true;
 const bool HasCounterTerm = true;
 
 
-const double amplitude = 2;
-const double attrctRepel = -1.0;
+const double amplitude = 1.0;
+const double attrctRepel = 1.0;
 
-const bool OnlySDiag = true;
+const bool OnlySDiag = false;
+const bool OnlySProj = false;
+const bool OnlyTUProj = false;
 
 
 typedef Vec<double, D> momentum;

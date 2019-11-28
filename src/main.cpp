@@ -69,7 +69,9 @@ void InitPara() {
       "8", // 4 loop
       "9", // 4 loop
   };
-  Para.ReWeight = {2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 1.0, 1.0, 1.0, 1.0};
+//  Para.ReWeight = {2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 1.0, 1.0, 1.0, 1.0};
+  Para.ReWeight = {2.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+
   // Para.SelfEnergyType = FOCK;
   Para.SelfEnergyType = selfenergy::BARE;
 
@@ -129,9 +131,15 @@ void InitPara() {
                                    << "Fermi Energy: " << Para.Ef << "\n");
 
   Para.PrinterTimer = 10;
-  Para.SaveFileTimer = 1;
-  Para.ReweightTimer = 10;
-  Para.MessageTimer = 1;
+  if(OnlySDiag){
+    Para.SaveFileTimer = 1;
+    Para.ReweightTimer = 10;
+    Para.MessageTimer = 1;
+  }else{
+    Para.SaveFileTimer = 10;
+    Para.ReweightTimer = 30;
+    Para.MessageTimer = 10;
+  }
 }
 
 void MonteCarlo() {
@@ -155,6 +163,7 @@ void MonteCarlo() {
 
   LOG_INFO("Loading Weight...")
   Markov.Weight.LoadWeight();
+
 
   while (true) {
     Block++;
@@ -180,7 +189,7 @@ void MonteCarlo() {
         Markov.ChangeTau(step);
       } else if (x < 4.0 / ChangeNum) {
         Markov.ChangeChannel(step);
-        // } else if (x < 5.0 / 5.0) {
+      // } else if (x < 5.0 / 5.0) {
         //   Markov.ChangeScale();
         // ;
       }
@@ -196,6 +205,7 @@ void MonteCarlo() {
       // }
 
       // if (i % 2 == 0)
+
       Markov.Measure();
       // Markov.DynamicTest();
 
@@ -220,6 +230,7 @@ void MonteCarlo() {
 
         if (SaveFileTimer.check(Para.SaveFileTimer)) {
           Interrupt.Delay(); // the process can not be killed in saving
+          cout << step <<endl;
           Markov.SaveToFile(false);
           Interrupt.Resume(); // after this point, the process can be killed
         }
@@ -231,6 +242,7 @@ void MonteCarlo() {
 
         if (MessageTimer.check(Para.MessageTimer)) {
           LOG_INFO("Loading Weight...")
+          cout << step <<endl;
           Markov.Weight.LoadWeight();
         }
       }

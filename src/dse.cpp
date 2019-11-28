@@ -38,10 +38,11 @@ ver4 verDiag::Build(array<momentum, MaxMomNum> &loopMom, int LoopNum,
   array<momentum *, 4> LegK;
 
   if (Channel.size() == 1) {
-    if (Channel[0]==dse::S)
+/*    if (Channel[0]==dse::S)
       LegK = {&(*LoopMom)[1], &(*LoopMom)[2], NextMom(), NextMom()};
     else
-      LegK = {&(*LoopMom)[1], NextMom(), &(*LoopMom)[2], NextMom()};
+      LegK = {&(*LoopMom)[1], NextMom(), &(*LoopMom)[2], NextMom()}; */
+      LegK = {&(*LoopMom)[1], &(*LoopMom)[2], NextMom(), NextMom()};
   } 
       // else
   //   ABORT("Root should only have one channel.");
@@ -209,10 +210,14 @@ ver4 verDiag::ChanUST(ver4 Ver4, vector<channel> Channel, int InTL, int LoopNum,
   bool HasT = bool(std::count(Channel.begin(), Channel.end(), T));
   bool HasU = bool(std::count(Channel.begin(), Channel.end(), U));
   bool HasS = bool(std::count(Channel.begin(), Channel.end(), S));
-  if (HasT || HasU)
-    Bubble.HasTU = true;
+  if (HasT)
+    Bubble.HasT = true;
   else
-    Bubble.HasTU = false;
+    Bubble.HasT = false;
+  if (HasU)
+    Bubble.HasU = true;
+  else
+    Bubble.HasU = false;
   if (HasS)
     Bubble.HasS = true;
   else
@@ -221,7 +226,7 @@ ver4 verDiag::ChanUST(ver4 Ver4, vector<channel> Channel, int InTL, int LoopNum,
   if (IsProjected) {
     for (auto &s : SymFactor)
       s *= -1;
-    if (HasT || HasU) {
+/*    if (HasT || HasU) {
       Bubble.LegK[T][INL] = NextMom();
       Bubble.LegK[T][INR] = NextMom();
       Bubble.LegK[T][OUTL] = Bubble.LegK[T][INL];
@@ -229,20 +234,25 @@ ver4 verDiag::ChanUST(ver4 Ver4, vector<channel> Channel, int InTL, int LoopNum,
       Bubble.LegK[U][INL] = Bubble.LegK[T][INL];
       Bubble.LegK[U][INR] = Bubble.LegK[T][INR];
       Bubble.LegK[U][OUTL] = Bubble.LegK[T][INR];
-      Bubble.LegK[U][OUTR] = Bubble.LegK[T][INL];
-    }
+      Bubble.LegK[U][OUTR] = Bubble.LegK[T][INL]; 
+    } */
+    if (HasT)
+      Bubble.LegK[T] = {NextMom(), NextMom(), NextMom(), NextMom()};
+    if (HasU)
+      Bubble.LegK[U] = {NextMom(), NextMom(), NextMom(), NextMom()};
     if (HasS)
       // Bubble.LegK[S] = {Bubble.LegK[T][INL], NextMom(), NextMom(),
       // NextMom()};
       Bubble.LegK[S] = {NextMom(), NextMom(), NextMom(), NextMom()};
       // no projection for S channel for now
       // Bubble.LegK[S] = Ver4.LegK;
-  } else
+  } else 
     for (auto &c : Channel)
       Bubble.LegK[c] = Ver4.LegK;
 
   auto &G = Bubble.G;
   auto &LegK = Bubble.LegK;
+
 
   G[0] = gMatrix(Ver4.TauNum, InTL, &(*LoopMom)[LoopIndex]);
   for (auto &c : Bubble.Channel)

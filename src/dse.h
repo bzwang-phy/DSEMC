@@ -92,7 +92,8 @@ struct pair {
 struct bubble {
   int InTL;
   bool IsProjected;
-  bool HasTU;
+  bool HasT;
+  bool HasU;
   bool HasS;
   vector<channel> Channel; // list of channels except I
   array<double, 4> ProjFactor;
