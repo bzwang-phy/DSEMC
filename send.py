@@ -31,6 +31,7 @@ infile = "inlist"
 
 lines = inlist.readlines()
 inlist.close()
+paraList = []
 for eachline in lines:
     os.chdir(rootdir)
     para = eachline.split()
@@ -49,6 +50,12 @@ for eachline in lines:
 
     homedir = os.getcwd() + \
         "/"+folderPre+"Order{0}_Beta{1}_lambda{2}".format(para[0],para[1],para[3])
+    paraName = "{0}_{1}_{2}".format(para[0], para[1], para[3])
+    if paraName in paraList:
+        homedir = os.getcwd() + \
+            "/" + folderPre + "Order{0}_Beta{1}_rs{2}_lambda{3}_Step{4}".format(
+            para[0],para[1],para[2],para[3],para[5])
+    paraList.append(paraName)
     if os.path.exists(homedir):
         os.chdir(homedir)
         os.system("rm -fr infile outfile jobfile groups")
