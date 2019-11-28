@@ -216,14 +216,15 @@ def main():
                 figNum += 1
                 print(folder)
                 readData(folder)
-                res = [DataAccum[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
-                ErrorPlot(ax, orderList, res, DataErr[0],
-                    ColorList[figNum], MarkerList[figNum], title)
-
-#                res = [Data[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
-#                err = [DataErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+#                res = [DataAccum[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+#                err = [DataAccumErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
 #                ErrorPlot(ax, orderList, res, err,
 #                    ColorList[figNum], MarkerList[figNum], title)
+
+                res = [Data[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+                err = [DataErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+                ErrorPlot(ax, orderList, res, err,
+                    ColorList[figNum], MarkerList[figNum], title)
 
 
     elif len(sys.argv) > 1:
@@ -254,15 +255,14 @@ def main():
             figNum += 1
             print(folder)
             readData(folder)
-            res = [DataAccum[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
-            err = [DataAccumErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
-            ErrorPlot(ax, orderList, res, err,
-                    ColorList[figNum], MarkerList[figNum], title)
-
-#            res = [Data[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
-#            err = [DataErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+#            res = [DataAccum[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+#            err = [DataAccumErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
 #            ErrorPlot(ax, orderList, res, err,
 #                    ColorList[figNum], MarkerList[figNum], title)
+            res = [Data[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+            err = [DataErr[(o,Channel[0])][0] for o in range(1,MaxOrder+1)]
+            ErrorPlot(ax, orderList, res, err,
+                    ColorList[figNum], MarkerList[figNum], title)
 
     ax.set_title(ChanName[Channel[0]]+"-channel")
     ax.set_xlabel("order")

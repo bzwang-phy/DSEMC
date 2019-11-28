@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 import os
 import sys
 import re
@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 
-SleepTime = 10.1
+SleepTime = 8
 
 rs = None
 Lambda = None
@@ -199,28 +199,28 @@ while True:
             qData = 8.0*np.pi/(ExtMomBin**2*kF**2+Lambda)-qData
             print("  Q/kF,    T,    Error")
             for i in range(len(qData)):
-                print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
-                    ExtMomBin[i], qData[i], DataErr[(0, 1)][i])
+                print("{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
+                    ExtMomBin[i], qData[i], DataErr[(0, 1)][i]))
 
             qData = Data[(0, 2)]
             print("  Q/kF,    U,    Error")
             for i in range(len(qData)):
-                print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
-                    ExtMomBin[i], qData[i], DataErr[(0, 2)][i])
+                print("{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
+                    ExtMomBin[i], qData[i], DataErr[(0, 2)][i]))
 
             qData = Data[(0, 3)]
             print("  Q/kF,    S,    Error")
             for i in range(len(qData)):
-                print "{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
-                    ExtMomBin[i], qData[i], DataErr[(0, 3)][i])
+                print("{0:6.2f}, {1:10.6f}, {2:10.6f}".format(
+                    ExtMomBin[i], qData[i], DataErr[(0, 3)][i]))
         except Exception as e:
             pass
     try:
         Step = StepMin
         SaveStep(Step, stepFlag)
         print("Step:{0}, TotalStep:{1} ".format(Step, TotalStep))
+        if Step >= TotalStep:
+            print("End of Simulation!")
+            sys.exit(0)
     except Exception as e:
         pass
-    if Step >= TotalStep:
-        print("End of Simulation!")
-        sys.exit(0)
