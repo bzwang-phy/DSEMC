@@ -33,6 +33,7 @@ int main(int argc, const char *argv[]) {
   cin >> Para.Order >> Para.Beta >> Para.Rs >> Para.Mass2 >> Para.MaxExtMom >>
       Para.TotalStep >> Para.Seed >> Para.PID;
 
+  Para.Order = Para.Order + 1;
   clock_t startTime = clock();
   InitPara(); // initialize global parameters
   MonteCarlo();

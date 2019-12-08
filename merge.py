@@ -162,7 +162,7 @@ while True:
                     Data0 /= Norm
                     Data0 = Data0.reshape((AngleBinSize, ExtMomBinSize))
 
-                    if DataWithAngle.has_key((order, chan)):
+                    if (order, chan) in DataWithAngle:
                         DataWithAngle[(order, chan)] = DataWithAngle[(
                             order, chan)]*0.0+Data0*1.0
                     else:

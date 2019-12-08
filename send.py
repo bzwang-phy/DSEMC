@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import random
 import os
 import sys
@@ -21,7 +21,8 @@ if len(sys.argv) == 1:
     execute = "feyncalc.exe"
 elif len(sys.argv) >= 2:
     folderPre = "_".join(sys.argv[1:])+"_"
-    execute = "feyncalc_"+folderPre[:-1]+".exe"
+    # execute = "feyncalc_"+folderPre[:-1]+".exe"
+    execute = "feyncalc.exe"
 
 
 rootdir = os.getcwd()

@@ -21,7 +21,12 @@ double weight::Evaluate(int LoopNum, int Channel) {
     // Var.LoopMom[0],
     //                              0.0, -2);
     return 1.0;
-  } else {
+  } 
+  else if (LoopNum==Para.Order && Channel!=des::S)
+  {
+    return 0.0;
+  }
+  else {
 
     ver4 &Root = Ver4Root[LoopNum][Channel];
     if (Root.Weight.size() == 0)
