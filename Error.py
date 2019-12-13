@@ -124,7 +124,7 @@ def readData(folder, qIndex):
             line0 = file.readline()
             if not line0:
                 break
-            step = int(line0.split(":")[-1])
+            step = float(line0.split(":")[-1])
             line1 = file.readline()
             dat = line1.strip().split(" ")
             dat = np.array([float(i) for i in dat])
@@ -156,7 +156,7 @@ def plot(flag):
         ErrorPlot(ax, xaxel, Gamma4q, ColorList[5], MarkerList[1], "")
 
         # ax.set_xlim([0.0, ExtMomBin[-1]])
-        ax.set_xlabel("Steps/$20*10^6$", size=size)
+        ax.set_xlabel("Steps/$10^7$", size=size)
         ax.set_ylabel("$-\Gamma_4(\omega=0, q=0)$", size=size)
     elif flag == 2:
         ax = plt.subplot(1,1,1)

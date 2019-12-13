@@ -22,7 +22,7 @@ double weight::Evaluate(int LoopNum, int Channel) {
     //                              0.0, -2);
     return 1.0;
   } 
-  else if (LoopNum==Para.Order && Channel!=des::S)
+  else if (LoopNum==Para.Order && Channel!=dse::S)
   {
     return 0.0;
   }
@@ -130,10 +130,11 @@ void weight::ChanUST(dse::ver4 &Ver4) {
 //    double ExpINR = pow((*LegK0[INR]).norm()-Para.Kf,2) * Para.Beta;
 //    double ExpOUTL = pow((*LegK0[OUTL]).norm()-Para.Kf,2) * Para.Beta;
 //    double ExpOUTR = pow((*LegK0[OUTR]).norm()-Para.Kf,2) * Para.Beta;
-    double ExpINL = abs((*LegK0[INL]).norm()-Para.Kf); //* sqrt(Para.Beta);
-    double ExpINR = abs((*LegK0[INR]).norm()-Para.Kf); //* sqrt(Para.Beta);
-    double ExpOUTL = abs((*LegK0[OUTL]).norm()-Para.Kf); //* sqrt(Para.Beta);
-    double ExpOUTR = abs((*LegK0[OUTR]).norm()-Para.Kf); //* sqrt(Para.Beta);
+//    cout << 1.0/Para.Beta<< "  "<<1.0/sqrt(Para.Beta)<< " "<<1.0/Para.Ef <<endl;
+    double ExpINL = abs((*LegK0[INL]).norm()-Para.Kf)* sqrt(Para.Beta);
+    double ExpINR = abs((*LegK0[INR]).norm()-Para.Kf)* sqrt(Para.Beta);
+    double ExpOUTL = abs((*LegK0[OUTL]).norm()-Para.Kf)* sqrt(Para.Beta);
+    double ExpOUTR = abs((*LegK0[OUTR]).norm()-Para.Kf)* sqrt(Para.Beta);
 
     if (bubble.IsProjected) {
       double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
@@ -155,7 +156,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[T][INR] = *LegK0[INR] * Ratio;
           *bubble.LegK[T][OUTL] = *LegK0[INL] * (-1.0);
           *bubble.LegK[T][OUTR] = *LegK0[INR] * (-1.0);
-          bubble.ProjFactor[T] = exp(-DirQ * DirQ / decayTU) * extKFactor;
+          bubble.ProjFactor[T] = exp(-DirQ * DirQ * Para.Beta/ decayTU) * extKFactor;
         } 
 /*      if(InQ < 1.0*Para.Kf){
         *bubble.LegK[T][INL] = InMom;
@@ -174,8 +175,8 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[U][INR] = *LegK0[INR] * Ratio;
           *bubble.LegK[U][OUTL] = *LegK0[INR] * (-1.0);
           *bubble.LegK[U][OUTR] = *LegK0[INL] * (-1.0);
-          bubble.ProjFactor[U] = exp(-ExQ * ExQ / decayTU) * extKFactor;
-        } 
+          bubble.ProjFactor[U] = exp(-ExQ * ExQ * Para.Beta/ decayTU) * extKFactor;
+        }
 /*        if(InQ < 1.0*Para.Kf){
           *bubble.LegK[U][INL] = InMom;
           *bubble.LegK[U][OUTL] = OutMom;
@@ -192,7 +193,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
           *bubble.LegK[S][INR] = *bubble.LegK[S][INL] * (-1.0);
           *bubble.LegK[S][OUTR] = *bubble.LegK[S][OUTL] * (-1.0); 
 //          bubble.ProjFactor[S] = exp(-InQ * InQ / Para.Ef / decayS) * extKFactor;
-          bubble.ProjFactor[S] = exp(-InQ * InQ/ decayS) * extKFactor;
+          bubble.ProjFactor[S] = exp(-InQ * InQ * Para.Beta/ decayS) * extKFactor;
         }
       }
     }
