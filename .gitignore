@@ -51,7 +51,7 @@ callgrind*
 *.pyc
 .ipynb*
 in00
-inlist
+inlist*
 *.data
 .vscode/
 Gamma4_T.py
