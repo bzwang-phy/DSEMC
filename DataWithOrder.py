@@ -196,7 +196,7 @@ def main():
             if len(line) < 2:
                 break
             para = line.split(" ")
-            MaxOrder = int(para[0])
+            MaxOrder = int(para[0]) + 1 #+1 if new resum method
             BetaStr = para[1]
             Beta = float(BetaStr)
             rsStr = para[2]
@@ -233,7 +233,7 @@ def main():
             with open(inlistf, "r") as file:
                 line = file.readline()
             para = line.split(" ")
-            MaxOrder = int(para[0])
+            MaxOrder = int(para[0]) + 1 #+1 if new resum method
             BetaStr = para[1]
             Beta = float(BetaStr)
             rsStr = para[2]

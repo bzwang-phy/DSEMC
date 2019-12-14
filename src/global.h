@@ -47,6 +47,7 @@ const double attrctRepel = -1.0;
 const bool OnlySDiag = false;
 const bool OnlySProj = false;
 const bool OnlyTUProj = false;
+const bool TUProjType = false;
 
 
 typedef Vec<double, D> momentum;
