@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import random
 import os
 import sys
@@ -21,7 +21,8 @@ if len(sys.argv) == 1:
     execute = "feyncalc.exe"
 elif len(sys.argv) >= 2:
     folderPre = "_".join(sys.argv[1:])+"_"
-    execute = "feyncalc_"+folderPre[:-1]+".exe"
+    # execute = "feyncalc_"+folderPre[:-1]+".exe"
+    execute = "feyncalc.exe"
 
 
 rootdir = os.getcwd()
@@ -31,6 +32,7 @@ infile = "inlist"
 
 lines = inlist.readlines()
 inlist.close()
+paraList = []
 for eachline in lines:
     os.chdir(rootdir)
     para = eachline.split()
@@ -49,12 +51,17 @@ for eachline in lines:
 
     homedir = os.getcwd() + \
         "/"+folderPre+"Order{0}_Beta{1}_lambda{2}".format(para[0],para[1],para[3])
+    paraName = "{0}_{1}_{2}".format(para[0], para[1], para[3])
+    if paraName in paraList:
+        homedir = os.getcwd() + \
+            "/" + folderPre + "Order{0}_Beta{1}_rs{2}_lambda{3}_Step{4}".format(
+            para[0],para[1],para[2],para[3],para[5])
+    paraList.append(paraName)
     if os.path.exists(homedir):
-        os.system("rm -fr "+homedir+"/groups")
-        os.system("rm -fr "+homedir+"/infile")
-        os.system("rm -fr "+homedir+"/outfile")
-        os.system("rm -fr "+homedir+"/jobfile")
-        os.system("rm "+homedir+"/*")
+        os.chdir(homedir)
+        os.system("rm -fr infile outfile jobfile groups")
+        os.system("rm  feyncalc.exe  vertex?_*   _?.log  merge.py  inlist")
+        os.chdir("../")
     else:
         os.system("mkdir "+homedir)
 
@@ -131,8 +138,8 @@ for eachline in lines:
             break
 
     os.chdir(homedir)
-    if "bare" not in folderPre.lower():
-        os.system("./" + merge + " > weight.log &")
+#    if "bare" not in folderPre.lower():
+    os.system("./" + merge + " > weight.log &")
 
 print("Jobs manage daemon is ended")
 sys.exit(0)
