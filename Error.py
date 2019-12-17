@@ -124,6 +124,7 @@ def readData(folder, qIndex):
             line0 = file.readline()
             if not line0:
                 break
+            print(line0.split(":")[-1])
             step = float(line0.split(":")[-1])
             line1 = file.readline()
             dat = line1.strip().split(" ")
@@ -191,7 +192,7 @@ def main():
             with open(inlistf, "r") as file:
                 line = file.readline()
             para = line.split(" ")
-            MaxOrder = int(para[0])
+            MaxOrder = int(para[0]) + 1 #+1 for new S-resum
             BetaStr = para[1]
             Beta = float(BetaStr)
             rsStr = para[2]

@@ -169,7 +169,7 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
     /*int AngleIndex_theta = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       int AngleIndex_phi = Angle2Index(Anglesurface(*LegK[INL], *LegK[INR], *LegK[OUTL], *LegK[OUTR]), AngBinSize/2); */
     double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
-    if(TUProjType)
+    if(TUProjType){
       if (kDiQ < 1.0* Para.Kf && !OnlySProj){
         int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
         EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ*kDiQ /decayTU)*extKFactor;
@@ -179,6 +179,7 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
 //      EffInt += EffInterU(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
         EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
       }
+    }
     if (kSQ < 1.0* Para.Kf){
       momentum InMom = *LegK[INL] - *LegK[INR];
       momentum OutMom = *LegK[OUTL] - *LegK[OUTR];

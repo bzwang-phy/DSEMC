@@ -37,15 +37,15 @@ const double ChangeNum = 4.0;
 const double decayTU = 1.0;
 const double decayS = 1.0;
 const double decayExtK = 1.0;
-const bool HasEffInteraction = true;
-const bool HasCounterTerm = true;
+const bool HasEffInteraction = false;
+const bool HasCounterTerm = false;
 
 
 const double amplitude = 2.0;
 const double attrctRepel = -1.0;
 
-const bool OnlySDiag = false;
-const bool OnlySProj = false;
+const bool OnlySDiag = true;
+const bool OnlySProj = true;
 const bool OnlyTUProj = false;
 const bool TUProjType = false;
 
