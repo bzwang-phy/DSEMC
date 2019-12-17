@@ -16,16 +16,12 @@ using namespace dse;
 
 double weight::Evaluate(int LoopNum, int Channel) {
   if (LoopNum == 0) {
-    // normalization
-    // return VerQTheta.Interaction(Var.LoopMom[1], Var.LoopMom[2],
-    // Var.LoopMom[0],
-    //                              0.0, -2);
     return 1.0;
   } 
-  else if (LoopNum==Para.Order && Channel!=dse::S)
-  {
-    return 0.0;
-  }
+//  else if (LoopNum==Para.Order && Channel!=dse::S)
+//  {
+//    return 0.0;
+//  }
   else {
 
     ver4 &Root = Ver4Root[LoopNum][Channel];

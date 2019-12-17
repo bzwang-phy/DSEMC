@@ -138,8 +138,8 @@ for eachline in lines:
             break
 
     os.chdir(homedir)
-#    if "bare" not in folderPre.lower():
-    os.system("./" + merge + " > weight.log &")
+    if "bare" not in folderPre.lower():
+        os.system("./" + merge + " > weight.log &")
 
 print("Jobs manage daemon is ended")
 sys.exit(0)

@@ -37,6 +37,7 @@ ChanName = {0: "I", 1: "T", 2: "U", 3: "S"}
 
 
 Order = None
+MaxOrder = 0
 kF = None
 Lambda = None
 AngleBin = None
@@ -176,7 +177,7 @@ def readData(folder, qIndex):
             DataAccumErr[(order, chan)] = np.sqrt(DataAccumErr[(order, chan)])
 #    print(DataErr)
 #    print(DataAccumErr)
-    print(DataAccum[(MaxOrder, Channel[0])][qIndex],DataAccumErr[(MaxOrder, Channel[0])][qIndex])
+    # print(DataAccum[(MaxOrder, Channel[0])][qIndex],DataAccumErr[(MaxOrder, Channel[0])][qIndex])
     Gamma4q.append( DataAccum[(MaxOrder, Channel[0])][qIndex] )
     Gamma4qErr.append( DataAccumErr[(MaxOrder, Channel[0])][qIndex] )
     Gamma4qLog.append( 1.0/DataAccum[(MaxOrder, Channel[0])][qIndex] )
@@ -231,9 +232,9 @@ def main():
         kF = (9.0*np.pi/4.0)**(1.0/3.0)/rs
         Order = range(0, MaxOrder+1)
         orderAccum = MaxOrder
+        # MaxOrder = 2
 
-#        folderPre = "RenormAttct_Amp5_"
-        folderPre = "2_"
+        folderPre = "RenormAttrct_SChain_"
         folder = folderPre + "Order{0}_Beta{1}_lambda{2}/".format(para[0], para[1], para[3])
         print(folder)
         TList.append(1.0/Beta)
