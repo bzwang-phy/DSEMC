@@ -32,7 +32,7 @@ enum type { GU, GW, RG, PARQUET };
 enum obstype { FREQ, EQUALTIME };
 enum ver4type { POINT, FULL, MOM, MOM_ANGLE };
 
-const double ChangeNum = 4.0;
+const double ChangeNum = 3.0;
 
 const double decayTU = 1.0;
 const double decayS = 1.0;

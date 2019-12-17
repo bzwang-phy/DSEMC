@@ -183,9 +183,11 @@ def main():
     global Order, orderAccum, Lambda, kF
     MarkerList = ['s','o','v','d','x','^','<','>','*','2','3','4','H','+','D', '.', ',']
     ColorList = ['k', 'r', 'b', 'g', 'm', 'c', 'navy', 'y','lime','fuchsia', 'aqua','sandybrown','slategrey']
+    ColorList = ColorList * 5
+    MarkerList = MarkerList * 5
 
     figNum = 0
-    folderPre = ["Bare_", "Renorm_"]
+    folderPre = ["RenormAttrct_SChain_"]
 
 
     ax = plt.subplot(1,1,1)
@@ -213,6 +215,7 @@ def main():
             folders = [getFileName(fp, para) for fp in folderPre]
             for folder in folders:
                 title = "Bare" if "bare" in folder.lower() else "Renorm"
+                title += " Beta:{0}".format(Beta)
                 figNum += 1
                 print(folder)
                 readData(folder)
