@@ -144,7 +144,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
       double ExQ = (*LegK0[INL] - *LegK0[OUTR]).norm();
       double InQ = (*LegK0[INL] + *LegK0[INR]).norm();
 
-      if(bubble.HasT && !OnlySProj){
+      if(bubble.HasT){
         if(TUProjType)
           if (DirQ < 1.0 * Para.Kf) {
             Ratio = Para.Kf / (*LegK0[INL]).norm();
@@ -164,7 +164,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
             bubble.ProjFactor[T] = exp(-InQ * InQ * Para.Beta / decayS) * extKFactor;
           } 
         }
-      if(bubble.HasU && !OnlySProj){
+      if(bubble.HasU){
         if(TUProjType)
           if (ExQ < 1.0 * Para.Kf) {
             Ratio = Para.Kf / (*LegK0[INL]).norm();
@@ -184,7 +184,7 @@ void weight::ChanUST(dse::ver4 &Ver4) {
             bubble.ProjFactor[U] = exp(-InQ * InQ * Para.Beta / decayS) * extKFactor;
           }
       }
-      if (bubble.HasS && !OnlyTUProj){
+      if (bubble.HasS){
         if(InQ < 1.0*Para.Kf){
           *bubble.LegK[S][INL] = InMom;
           *bubble.LegK[S][OUTL] = OutMom;

@@ -232,9 +232,9 @@ def main():
         kF = (9.0*np.pi/4.0)**(1.0/3.0)/rs
         Order = range(0, MaxOrder+1)
         orderAccum = MaxOrder
-        # MaxOrder = 2
+        MaxOrder = 6
 
-        folderPre = "RenormAttrct_SChain_"
+        folderPre = "BareAttrct_SChain_"
         folder = folderPre + "Order{0}_Beta{1}_lambda{2}/".format(para[0], para[1], para[3])
         print(folder)
         TList.append(1.0/Beta)
