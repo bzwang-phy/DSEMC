@@ -149,14 +149,11 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
   double kDiQ = DiQ.norm();
   double kExQ = ExQ.norm();
   double kSQ = InQ.norm();
-//  double ExpINL = pow((*LegK[INL]).norm()-Para.Kf,2) * Para.Beta;
-//  double ExpINR = pow((*LegK[INR]).norm()-Para.Kf,2) * Para.Beta;
-//  double ExpOUTL = pow((*LegK[OUTL]).norm()-Para.Kf,2) * Para.Beta;
-//  double ExpOUTR = pow((*LegK[OUTR]).norm()-Para.Kf,2) * Para.Beta;
-  double ExpINL = abs((*LegK[INL]).norm()-Para.Kf)* sqrt(Para.Beta);
-  double ExpINR = abs((*LegK[INR]).norm()-Para.Kf)* sqrt(Para.Beta);
-  double ExpOUTL = abs((*LegK[OUTL]).norm()-Para.Kf)* sqrt(Para.Beta);
-  double ExpOUTR = abs((*LegK[OUTR]).norm()-Para.Kf)* sqrt(Para.Beta);
+
+  double ExpINL = abs((*LegK[INL]).norm()-Para.Kf);
+  double ExpINR = abs((*LegK[INR]).norm()-Para.Kf);
+  double ExpOUTL = abs((*LegK[OUTL]).norm()-Para.Kf);
+  double ExpOUTR = abs((*LegK[OUTR]).norm()-Para.Kf);
 
   if (VerType == 0) {
     return amplitude*attrctRepel*(-8.0 * PI / (kDiQ * kDiQ + Para.Mass2) + 8.0*PI / (kExQ * kExQ + Para.Mass2));
@@ -168,13 +165,13 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
 
     /*int AngleIndex_theta = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]), AngBinSize);
       int AngleIndex_phi = Angle2Index(Anglesurface(*LegK[INL], *LegK[INR], *LegK[OUTL], *LegK[OUTR]), AngBinSize/2); */
-    double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/decayExtK);
+    double extKFactor = exp(-(ExpINL+ExpINR+ExpOUTL+ExpOUTR)/(decayExtK * Para.Kf));
     if(TUProjType){
-      if (kDiQ < 1.0* Para.Kf && !OnlySProj){
+      if (kDiQ < 1.0* Para.Kf){
         int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
         EffInt += EffInterT(AngleIndex, 0) * exp(-kDiQ*kDiQ /decayTU)*extKFactor;
       }
-      if (kExQ < 1.0* Para.Kf && !OnlySProj){
+      if (kExQ < 1.0* Para.Kf){
         int AngleIndex = Angle2Index(Angle3D(*LegK[INL], *LegK[INR]),AngBinSize);
 //      EffInt += EffInterU(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
         EffInt -= EffInterT(AngleIndex, 0) * exp(-kExQ*kExQ /decayTU)*extKFactor;
@@ -183,8 +180,8 @@ double verQTheta::Interaction(const array<momentum *, 4> &LegK, double Tau,
     if (kSQ < 1.0* Para.Kf){
       momentum InMom = *LegK[INL] - *LegK[INR];
       momentum OutMom = *LegK[OUTL] - *LegK[OUTR];
-      int AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize);
-      if (!OnlySProj && !TUProjType)
+      int AngleIndex = Angle2Index(Angle3D(InMom, OutMom), AngBinSize); 
+      if (!TUProjType)
         EffInt += (EffInterT(AngleIndex, 0) + EffInterU(AngleIndex, 0)) * exp(-kSQ*kSQ*Para.Beta / decayS)*extKFactor;
       EffInt += EffInterS(AngleIndex, 0) * exp(-kSQ*kSQ* Para.Beta / decayS)*extKFactor;
     }
